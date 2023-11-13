@@ -1,0 +1,9 @@
+module.exports = [
+    "Vested BLU",
+    "vBLU",
+    "31536000",
+    "0xafb5b77201aF3afbeE2b25c76b2DcE618a65d3bf",
+    "0x71fbf7C63a196CE008aAbd2f9BB68619bFb3A837",
+    "0xDc2C540Fd99eb5dC424095C8C6A63f7c805D46e9",
+    "0x81d201D05162B2E5f6B990E5950841651066438B",
+]
