@@ -1,7 +1,5 @@
-# GMX Contracts
-Contracts for GMX.
-
-Docs at https://gmxio.gitbook.io/gmx/contracts.
+# AMP Contracts
+Contracts for AMP.
 
 ## Install Dependencies
 If npx is not installed yet:
