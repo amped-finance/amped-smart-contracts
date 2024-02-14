@@ -1,5 +1,5 @@
-const { getFrameSigner, deployContract, contractAt, sendTxn, updateTokensPerInterval } = require("../shared/helpers")
-const { expandDecimals } = require("../../test/shared/utilities")
+const { getFrameSigner, deployContract, contractAt, sendTxn, updateTokensPerInterval, signers } = require("../shared/helpers")
+const { expandDecimals } = require("../../test/shared/utilities");
 
 const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 
@@ -23,20 +23,20 @@ async function getArbValues(signer) {
   return { rewardToken, tokenDecimals, rewardTrackerArr }
 }
 
-async function getAvaxValues(signer) {
-  const rewardToken = await contractAt("Token", "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", signer)
+async function getPegasusValues(signer) {
+  const rewardToken = await contractAt("Token", "0xF42991f02C07AB66cFEa282E7E482382aEB85461", signer)
   const tokenDecimals = 18
 
   const rewardTrackerArr = [
     {
       name: "feeAmpTracker",
-      address: "0x4d268a7d4C16ceB5a606c173Bd974984343fea13",
-      transferAmount: "3678"
+      address: "0xE90eb1FE40c0134251d5bd9358fF92a25650618d",
+      transferAmount: "0.1"
     },
     {
       name: "feeAlpTracker",
-      address: "0xd2D1162512F927a7e282Ef43a362659E4F2a728F",
-      transferAmount: "16129"
+      address: "0xFde2DE66Aa6cb6f7A4565Fab3449236738D28213",
+      transferAmount: "0"
     }
   ]
 
@@ -48,13 +48,14 @@ function getValues(signer) {
     return getArbValues(signer)
   }
 
-  if (network === "avax") {
-    return getAvaxValues(signer)
+  if (network === "pegasus") {
+    return getPegasusValues(signer)
   }
 }
 
 async function main() {
-  const signer = await getFrameSigner()
+  // const signer = await getFrameSigner()
+  const signer = signers["pegasus"]
   const { rewardToken, tokenDecimals, rewardTrackerArr } = await getValues(signer)
 
   for (let i = 0; i < rewardTrackerArr.length; i++) {
