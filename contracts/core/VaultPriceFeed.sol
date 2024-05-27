@@ -302,7 +302,7 @@ contract VaultPriceFeed is IVaultPriceFeed {
         // uint80 roundId = priceFeed.latestRound();
 
         price = priceFeed.latestAnswer();
-        require(price > 0, "VaultPriceFeed: invalid price");
+        // require(price > 0, "VaultPriceFeed: invalid price");
 
         // for (uint80 i = 0; i < priceSampleSpace; i++) {
         //     if (roundId <= i) { break; }
