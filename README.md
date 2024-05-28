@@ -14,6 +14,6 @@ Install packages:
 ## Run Tests
 `npx hardhat test`
 
-*** npx hardhat run --network core scripts/deploy.js
-*** npx hardhat verify --network core [address]
+*** npx hardhat run --network pegasus scripts/deploy.js
+*** npx hardhat verify --network pegasus [address]
 -------------------------------------------------------------------------------
