@@ -23,11 +23,14 @@ const {
   // POLYGON_URL,
   // MAINNET_URL,
   // MAINNET_DEPLOY_KEY,
+  PEGASUS_RPC,
+  PEGASUS_DEPLOY_KEY,
   CORE_RPC,
   CORE_DEPLOY_KEY,
   BSCTESTNET_RPC,
   BSCTESTNET_DEPLOY_KEY,
-  CORESCAN_API_KEY
+  CORESCAN_API_KEY,
+  PEGASUS_API_KEY
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -63,11 +66,11 @@ module.exports = {
     hardhat: {
       allowUnlimitedContractSize: true
     },
-    core: {
-      url: CORE_RPC,
+    pegasus: {
+      url: PEGASUS_RPC,
       // gasPrice: 2000000000,
       chainId: 1891,
-      accounts: [CORE_DEPLOY_KEY],
+      accounts: [PEGASUS_DEPLOY_KEY],
     },
     bsctestnet: {
       url: BSCTESTNET_RPC,
@@ -78,15 +81,15 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      core: CORESCAN_API_KEY,
+      pegasus: PEGASUS_API_KEY,
     },
     customChains: [
       {
-        network: "core",
-        chainId: 1116,
+        network: "pegasus",
+        chainId: 1891,
         urls: {
-          apiURL: "https://openapi.coredao.org/api",
-          browserURL: "https://scan.coredao.org/",
+          apiURL: "https://pegasus.lightlink.io/api",
+          browserURL: "https://pegasus.lightlink.io",
         },
       },
     ]
