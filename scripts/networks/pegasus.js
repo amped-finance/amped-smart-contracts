@@ -22,7 +22,7 @@ const deployMulticall = require("../core/deployMulticall");
 const directPoolDeposit = require("../core/directPoolDeposit");
 // const configureNewToken = require("../peripherals/configureNewToken");
 
-const deploy_core = async () => {
+const deploy_pegasus = async () => {
   syncDeployInfo("usdt", {
     name: "usdt",
     imple: "0x057e8e2bC40ECff87e6F9b28750D5E7AC004Eab9",
@@ -45,27 +45,27 @@ const deploy_core = async () => {
   });
   syncDeployInfo("MultiSigner1", {
     name: "MultiSigner1",
-    imple: "0x0d03b4D62987A8A5BF74Bb71af4AEFb40947277c",
+    imple: "0x85a26bC8b81E8252e3714948d8BBf6ae8764e88A",
   });
   syncDeployInfo("MultiSigner2", {
     name: "MultiSigner2",
-    imple: "0x04bbc9f5Af486c7DC183FfFa1FD5D3D3fe079142",
+    imple: "0x4e32a10574321b7b16Ede27c04DabF8dfbE3AD0A",
   });
   syncDeployInfo("MultiSigner3", {
     name: "MultiSigner3",
-    imple: "0xb510D1E8409EF66eeBbd303c7465Db01a5528310",
+    imple: "0xECAF2975993E5Eb86fc1fa0FFbC8e4116f075A4b",
   });
   syncDeployInfo("MultiSigner4", {
     name: "MultiSigner4",
-    imple: "0x31Cae7c3bD207ff1d57fd08d2689E886f3e456e4",
+    imple: "0x1A66DA217d84A73e646106A65550332d81d6cC68",
   });
   syncDeployInfo("MultiSigner5", {
     name: "MultiSigner5",
-    imple: "0x96958f157DCD4A7A63609a73D4eDA423BdB99070",
+    imple: "0xa54BAB0C52f3b1bB688eDa06446A96AD6De509DB",
   });
   syncDeployInfo("MultiSigner6", {
     name: "MultiSigner6",
-    imple: "0xF9939ffBe5Ec4997CAF5D6588d6F15F6416C9a04",
+    imple: "0x8d3c366aA5594C25f592045D68896c5D8E145488",
   });
   await deployMulticall()
 
@@ -95,4 +95,4 @@ const deploy_core = async () => {
   //  await configureNewToken()
 };
 
-module.exports = { deploy_core };
+module.exports = { deploy_pegasus };

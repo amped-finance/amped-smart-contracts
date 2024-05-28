@@ -6,7 +6,7 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 const { deploy_localhost } = require("./networks/localhost")
-const { deploy_core } = require('./networks/core')
+const { deploy_pegasus } = require('./networks/pegasus')
 const { deploy_bsctestnet } = require('./networks/bsctestnet')
 const { setNetwork } = require("./shared/syncParams")
 
@@ -29,8 +29,8 @@ async function main() {
 
   if (hre.network.name === "hardhat" || hre.network.name === "localhost") {
     await deploy_localhost()
-  } else if (hre.network.name === "core") {
-    await deploy_core()
+  } else if (hre.network.name === "pegasus") {
+    await deploy_pegasus()
   } else if (hre.network.name === "bsctestnet") {
     await deploy_bsctestnet()
   }
