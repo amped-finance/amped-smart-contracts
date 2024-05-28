@@ -1,5 +1,5 @@
 const chainInfo = {
-    core: {
+    pegasus: {
         gmx: {
             name: "Amped Finance",
             symbol: "AMP"
