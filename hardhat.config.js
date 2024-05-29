@@ -25,12 +25,10 @@ const {
   // MAINNET_DEPLOY_KEY,
   PEGASUS_RPC,
   PEGASUS_DEPLOY_KEY,
-  CORE_RPC,
-  CORE_DEPLOY_KEY,
-  BSCTESTNET_RPC,
-  BSCTESTNET_DEPLOY_KEY,
-  CORESCAN_API_KEY,
-  PEGASUS_API_KEY
+  PEGASUS_API_KEY,
+  PHOENIX_RPC,
+  PHOENIX_DEPLOY_KEY,
+  PHOENIX_API_KEY
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -72,16 +70,23 @@ module.exports = {
       chainId: 1891,
       accounts: [PEGASUS_DEPLOY_KEY],
     },
-    bsctestnet: {
-      url: BSCTESTNET_RPC,
-      gasPrice: 10000000000,
-      chainId: 97,
-      accounts: [BSCTESTNET_DEPLOY_KEY]
+    phoenix: {
+      url: PHOENIX_RPC,
+      // gasPrice: 2000000000,
+      chainId: 1890,
+      accounts: [PHOENIX_DEPLOY_KEY],
     },
+    // bsctestnet: {
+    //   url: BSCTESTNET_RPC,
+    //   gasPrice: 10000000000,
+    //   chainId: 97,
+    //   accounts: [BSCTESTNET_DEPLOY_KEY]
+    // },
   },
   etherscan: {
     apiKey: {
       pegasus: PEGASUS_API_KEY,
+      phoenix: PHOENIX_API_KEY,
     },
     customChains: [
       {
@@ -90,6 +95,14 @@ module.exports = {
         urls: {
           apiURL: "https://pegasus.lightlink.io/api",
           browserURL: "https://pegasus.lightlink.io",
+        },
+      },
+      {
+        network: "phoenix",
+        chainId: 1890,
+        urls: {
+          apiURL: "https://phoenix.lightlink.io/api",
+          browserURL: "https://phoenix.lightlink.io",
         },
       },
     ]
