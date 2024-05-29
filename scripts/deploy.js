@@ -7,6 +7,7 @@
 const hre = require("hardhat");
 const { deploy_localhost } = require("./networks/localhost")
 const { deploy_pegasus } = require('./networks/pegasus')
+const { deploy_phoenix } = require('./networks/phoenix')
 const { deploy_bsctestnet } = require('./networks/bsctestnet')
 const { setNetwork } = require("./shared/syncParams")
 
@@ -31,7 +32,9 @@ async function main() {
     await deploy_localhost()
   } else if (hre.network.name === "pegasus") {
     await deploy_pegasus()
-  } else if (hre.network.name === "bsctestnet") {
+  } else if (hre.network.name === "phoenix") {
+    await deploy_phoenix()
+  }else if (hre.network.name === "bsctestnet") {
     await deploy_bsctestnet()
   }
 }
