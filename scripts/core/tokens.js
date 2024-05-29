@@ -408,7 +408,7 @@ module.exports = {
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
     },
-  }
+  },
   phoenix: {
     usdt: {
       name: "usdt",
