@@ -39,6 +39,10 @@ const deploy_phoenix = async () => {
     name: "weth",
     imple: "0x7EbeF2A4b1B09381Ec5B9dF8C5c6f2dBECA59c73",
   });
+  syncDeployInfo("WETH", {
+    name: "WETH",
+    imple: "0x7EbeF2A4b1B09381Ec5B9dF8C5c6f2dBECA59c73",
+  });
   syncDeployInfo("wbtc", {
     name: "wbtc",
     imple: "0x46A5e3Fa4a02B9Ae43D9dF9408C86eD643144A67",
