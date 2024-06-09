@@ -5,14 +5,14 @@ const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 
 const shouldSendTxn = true
 
-const monthlyEsGmxForGlpOnArb = expandDecimals(toInt("0"), 18)
-const monthlyEsGmxForGlpOnAvax = expandDecimals(toInt("0"), 18)
+const monthlyEsGmxForGlpOnArb = expandDecimals(toInt("100"), 18)
+const monthlyEsGmxForGlpOnAvax = expandDecimals(toInt("100"), 18)
 
 async function getStakedAmounts() {
-  const arbStakedGmxTracker = await contractAt("RewardTracker", "0x908C4D94D34924765f1eDc22A1DD098397c59dD4", signers.arbitrum)
+  const arbStakedGmxTracker = await contractAt("RewardTracker", "0x8210Da5171B10cB934CC8a658840c663aAFF43A4", signers.pegasus)
   const arbStakedGmxAndEsGmx =await arbStakedGmxTracker.totalSupply()
 
-  const avaxStakedGmxTracker = await contractAt("RewardTracker", "0x908C4D94D34924765f1eDc22A1DD098397c59dD4", signers.avax)
+  const avaxStakedGmxTracker = await contractAt("RewardTracker", "0x3c9586567a429BA0467Bc63FD38ea71bB6B912E0", signers.phoenix)
   const avaxStakedGmxAndEsGmx =await avaxStakedGmxTracker.totalSupply()
 
   return {
@@ -21,16 +21,16 @@ async function getStakedAmounts() {
   }
 }
 
-async function getArbValues() {
-  const gmxRewardTracker = await contractAt("RewardTracker", "0x908C4D94D34924765f1eDc22A1DD098397c59dD4")
-  const glpRewardTracker = await contractAt("RewardTracker", "0x1aDDD80E6039594eE970E5872D247bf0414C8903")
+async function getPegasusValues() {
+  const gmxRewardTracker = await contractAt("RewardTracker", "0x8210Da5171B10cB934CC8a658840c663aAFF43A4")
+  const glpRewardTracker = await contractAt("RewardTracker", "0x066c39f7Cc4e702c49ecb23E10E83DFE58b0B59b")
   const tokenDecimals = 18
   const monthlyEsGmxForGlp = monthlyEsGmxForGlpOnArb
 
   return { tokenDecimals, gmxRewardTracker, glpRewardTracker, monthlyEsGmxForGlp }
 }
 
-async function getAvaxValues() {
+async function getPhoenixValues() {
   const gmxRewardTracker = await contractAt("RewardTracker", "0x2bD10f8E93B3669b6d42E74eEedC65dd1B0a1342")
   const glpRewardTracker = await contractAt("RewardTracker", "0x9e295B5B976a184B14aD8cd72413aD846C299660")
   const tokenDecimals = 18
@@ -40,12 +40,12 @@ async function getAvaxValues() {
 }
 
 function getValues() {
-  if (network === "arbitrum") {
-    return getArbValues()
+  if (network === "pegasus") {
+    return getPegasusValues()
   }
 
-  if (network === "avax") {
-    return getAvaxValues()
+  if (network === "phoenix") {
+    return getPhoenixValues()
   }
 }
 
@@ -58,10 +58,10 @@ async function main() {
   const { tokenDecimals, gmxRewardTracker, glpRewardTracker, monthlyEsGmxForGlp } = await getValues()
 
   const stakedAmounts = {
-    arbitrum: {
+    pegasus: {
       total: arbStakedGmxAndEsGmx
     },
-    avax: {
+    phoenix: {
       total: avaxStakedGmxAndEsGmx
     }
   }
