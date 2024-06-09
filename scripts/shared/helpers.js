@@ -3,7 +3,39 @@ const path = require("path");
 const parse = require("csv-parse");
 const { run } = require('hardhat')
 
-const { CORE_URL, CORE_DEPLOY_KEY } = require("../../env.json");
+const {
+  ARBITRUM_URL,
+  AVAX_URL,
+  GOERLI_URL,
+  CRONOS_URL,
+  ARBITRUM_DEPLOY_KEY,
+  AVAX_DEPLOY_KEY,
+  GOERLI_DEPLOY_KEY,
+  CRONOS_DEPLOY_KEY,
+  PEGASUS_DEPLOY_KEY,
+  PEGASUS_URL,
+  PHOENIX_DEPLOY_KEY,
+  PHOENIX_URL,
+} = require("../../env.json");
+const { ADDRESS_ZERO } = require('@uniswap/v3-sdk');
+
+const providers = {
+  arbitrum: new ethers.providers.JsonRpcProvider(ARBITRUM_URL),
+  avax: new ethers.providers.JsonRpcProvider(AVAX_URL),
+  goerli: new ethers.providers.JsonRpcProvider(GOERLI_URL),
+  cronos: new ethers.providers.JsonRpcProvider(CRONOS_URL),
+  pegasus: new ethers.providers.JsonRpcProvider(PEGASUS_URL),
+  phoenix: new ethers.providers.JsonRpcProvider(PHOENIX_URL)
+}
+
+const signers = {
+  arbitrum: new ethers.Wallet(ARBITRUM_DEPLOY_KEY).connect(providers.arbitrum),
+  avax: new ethers.Wallet(ARBITRUM_DEPLOY_KEY).connect(providers.avax),
+  goerli: new ethers.Wallet(GOERLI_DEPLOY_KEY).connect(providers.goerli),
+  cronos: new ethers.Wallet(CRONOS_DEPLOY_KEY).connect(providers.cronos),
+  pegasus: new ethers.Wallet(PEGASUS_DEPLOY_KEY).connect(providers.pegasus),
+  phoenix: new ethers.Wallet(PHOENIX_DEPLOY_KEY).connect(providers.phoenix),
+}
 const { syncDeployInfo, addGasUsed } = require("./syncParams");
 
 function sleep(ms) {
