@@ -17,8 +17,8 @@ const providers = {
 }
 
 const signers = {
-  arbitrum: new ethers.Wallet(PEGASUS_DEPLOY_KEY).connect(providers.pegasus),
-  avax: new ethers.Wallet(PHOENIX_DEPLOY_KEY).connect(providers.phoenix),
+  pegasus: new ethers.Wallet(PEGASUS_DEPLOY_KEY).connect(providers.pegasus),
+  phoenix: new ethers.Wallet(PHOENIX_DEPLOY_KEY).connect(providers.phoenix),
 }
 
 const { syncDeployInfo, addGasUsed } = require("./syncParams");
