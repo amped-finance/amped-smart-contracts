@@ -5,15 +5,15 @@ const { run } = require('hardhat')
 
 const {
   PEGASUS_DEPLOY_KEY,
-  PEGASUS_URL,
+  PEGASUS_RPC,
   PHOENIX_DEPLOY_KEY,
-  PHOENIX_URL,
+  PHOENIX_RPC,
 } = require("../../env.json");
 const { ADDRESS_ZERO } = require('@uniswap/v3-sdk');
 
 const providers = {
-  pegasus: new ethers.providers.JsonRpcProvider(PEGASUS_URL),
-  phoenix: new ethers.providers.JsonRpcProvider(PHOENIX_URL),
+  pegasus: new ethers.providers.JsonRpcProvider(PEGASUS_RPC),
+  phoenix: new ethers.providers.JsonRpcProvider(PHOENIX_RPC),
 }
 
 const signers = {
