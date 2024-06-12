@@ -79,10 +79,10 @@ async function main() {
 
   const gmxCurrentTokensPerInterval = await gmxRewardDistributor.tokensPerInterval()
   const gmxNextTokensPerInterval = totalEsGmxRewards.mul(stakedAmounts[network].total).div(totalStaked).div(secondsPerMonth)
-  const gmxDelta = gmxNextTokensPerInterval.sub(gmxCurrentTokensPerInterval).mul(10000).div(gmxCurrentTokensPerInterval)
+  // const gmxDelta = gmxNextTokensPerInterval.sub(gmxCurrentTokensPerInterval).mul(10000).div(gmxCurrentTokensPerInterval)
 
   console.log("gmxCurrentTokensPerInterval", gmxCurrentTokensPerInterval.toString())
-  console.log("gmxNextTokensPerInterval", gmxNextTokensPerInterval.toString(), `${gmxDelta.toNumber() / 100.00}%`)
+  // console.log("gmxNextTokensPerInterval", gmxNextTokensPerInterval.toString(), `${gmxDelta.toNumber() / 100.00}%`)
 
   const glpRewardDistributor = await contractAt("RewardDistributor", await glpRewardTracker.distributor())
 
