@@ -3,18 +3,18 @@ const { getFrameSigner, contractAt, sendTxn, updateTokensPerInterval } = require
 const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 
 async function getArbValues(signer) {
-  const rewardToken = await contractAt("Token", "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", signer)
+  const rewardToken = await contractAt("Token", "0xF42991f02C07AB66cFEa282E7E482382aEB85461", signer)
   const tokenDecimals = 18
 
   const rewardTrackerArr = [
     {
       name: "feeGmxTracker",
-      address: "0xd2D1162512F927a7e282Ef43a362659E4F2a728F",
+      address: "0x2a8523678a709360bE70E1e3C26Ebc227FA2866F",
       transferAmount: "1207"
     },
     {
       name: "feeGlpTracker",
-      address: "0x4e971a87900b931fF39d1Aad67697F49835400b6",
+      address: "0x02b50Ded7CB3a83b6cb7d2Ea2a6B2bb2ea5d982e",
       transferAmount: "2593"
     }
   ]
@@ -23,18 +23,18 @@ async function getArbValues(signer) {
 }
 
 async function getAvaxValues(signer) {
-  const rewardToken = await contractAt("Token", "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", signer)
+  const rewardToken = await contractAt("Token", "0x7EbeF2A4b1B09381Ec5B9dF8C5c6f2dBECA59c73", signer)
   const tokenDecimals = 18
 
   const rewardTrackerArr = [
     {
       name: "feeGmxTracker",
-      address: "0x4d268a7d4C16ceB5a606c173Bd974984343fea13",
+      address: "0xB87bc8A763A7856C5806bB0920C00c97Ca5c00d3",
       transferAmount: "7414"
     },
     {
       name: "feeGlpTracker",
-      address: "0xd2D1162512F927a7e282Ef43a362659E4F2a728F",
+      address: "0xEE5BD4c29f4cAC23554cc3965D7aE0E22FE84BD7",
       transferAmount: "38822"
     }
   ]
