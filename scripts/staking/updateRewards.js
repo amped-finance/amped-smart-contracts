@@ -10,12 +10,12 @@ async function getArbValues(signer) {
     {
       name: "feeGmxTracker",
       address: "0x2a8523678a709360bE70E1e3C26Ebc227FA2866F",
-      transferAmount: "1207"
+      transferAmount: "0"
     },
     {
       name: "feeGlpTracker",
       address: "0x02b50Ded7CB3a83b6cb7d2Ea2a6B2bb2ea5d982e",
-      transferAmount: "2593"
+      transferAmount: "0"
     }
   ]
 
@@ -43,13 +43,13 @@ async function getAvaxValues(signer) {
 }
 
 function getValues(signer) {
-  if (network === "arbitrum") {
+  if (network === "pegasus") {
     return getArbValues(signer)
   }
 
-  if (network === "avax") {
-    return getAvaxValues(signer)
-  }
+  //if (network === "phoenix") {
+  //  return getAvaxValues(signer)
+  //}
 }
 
 async function main() {
