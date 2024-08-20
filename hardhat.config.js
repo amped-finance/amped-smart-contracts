@@ -6,13 +6,13 @@ require('@typechain/hardhat')
 const {
   // BSC_URL,
   // BSC_DEPLOY_KEY,
-  // BSCSCAN_API_KEY,
+  BSCSCAN_API_KEY,
   // POLYGONSCAN_API_KEY,
   // SNOWTRACE_API_KEY,
   // ARBISCAN_API_KEY,
   // ETHERSCAN_API_KEY,
-  // BSC_TESTNET_URL,
-  // BSC_TESTNET_DEPLOY_KEY,
+  BSC_TESTNET_URL,
+  BSC_TESTNET_DEPLOY_KEY,
   // ARBITRUM_TESTNET_DEPLOY_KEY,
   // ARBITRUM_TESTNET_URL,
   // ARBITRUM_DEPLOY_KEY,
@@ -76,17 +76,18 @@ module.exports = {
       chainId: 1890,
       accounts: [PHOENIX_DEPLOY_KEY],
     },
-    // bsctestnet: {
-    //   url: BSCTESTNET_RPC,
-    //   gasPrice: 10000000000,
-    //   chainId: 97,
-    //   accounts: [BSCTESTNET_DEPLOY_KEY]
-    // },
+    bsctestnet: {
+      url: BSC_TESTNET_URL,
+      // gasPrice: 10000000000,
+      chainId: 97,
+      accounts: [BSC_TESTNET_DEPLOY_KEY]
+    },
   },
   etherscan: {
     apiKey: {
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
+      apiKey: BSCSCAN_API_KEY
     },
     customChains: [
       {
