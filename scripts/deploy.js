@@ -9,7 +9,6 @@ const { deploy_localhost } = require("./networks/localhost")
 const { deploy_pegasus } = require('./networks/pegasus')
 const { deploy_phoenix } = require('./networks/phoenix')
 const { deploy_bsctestnet } = require('./networks/bsctestnet')
-const { deploy_bsctestnet } = require('./networks/bsctestnet')
 const { setNetwork } = require("./shared/syncParams")
 
 async function main() {
