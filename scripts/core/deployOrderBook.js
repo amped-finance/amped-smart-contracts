@@ -3,7 +3,7 @@ const { expandDecimals } = require("../../test/shared/utilities");
 const { getDeployFilteredInfo } = require("../shared/syncParams");
 
 async function deployOrderBook() {
-  const { imple: nativeToken } = getDeployFilteredInfo("WETH")
+  const { imple: nativeToken } = getDeployFilteredInfo("nativeToken")
 
   await deployContract("OrderBook", []);
 

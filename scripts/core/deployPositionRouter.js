@@ -8,7 +8,7 @@ async function deployPositionRouter() {
   const {imple: vaultAddr} = getDeployFilteredInfo("Vault")
   const {imple: timelockAddr} = getDeployFilteredInfo("Timelock")
   const {imple: routerAddr} = getDeployFilteredInfo("Router")
-  const {imple: weth} = getDeployFilteredInfo("WETH")
+  const {imple: weth} = getDeployFilteredInfo("nativeToken")
   const {imple: shortsTrackerAddr} = getDeployFilteredInfo("ShortsTracker")
   const {imple: shortsTrackerTimelockAddr} = getDeployFilteredInfo("ShortsTrackerTimelock")
   const depositFee = "30" // 0.3%
