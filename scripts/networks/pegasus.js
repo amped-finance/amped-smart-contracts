@@ -35,6 +35,10 @@ const deploy_pegasus = async () => {
     name: "weth",
     imple: "0xF42991f02C07AB66cFEa282E7E482382aEB85461",
   });
+  syncDeployInfo("nativeToken", {
+    name: "nativeToken",
+    imple: "0xF42991f02C07AB66cFEa282E7E482382aEB85461",
+  });
   syncDeployInfo("wbtc", {
     name: "wbtc",
     imple: "0x9Ee1Aa18F3FEB435f811d6AE2F71B7D2a4Adce0B",

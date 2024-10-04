@@ -608,6 +608,34 @@ module.exports = {
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
     },
+    eth: {
+      name: "eth",
+      address: "0x1958f7C067226c7C8Ac310Dc994D0cebAbfb2B02", // TODO
+      decimals: 18,
+      priceFeed: "0x143db3CEEfbdfe5631aDD3E50f7614B6ba708BA7",
+      priceDecimals: 8,
+      stable: false,
+      tokenWeight: 10000,
+      minProfitBps: 300,
+      maxUsdgAmount: 0, //10 * 1000 * 1000,
+      bufferAmount: 1 * 1000 * 1000,
+      isStable: false,
+      isShortable: true,
+      fastPricePrecision: 1000,
+      maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
+      maxGlobalLongSize: 30 * 1000 * 1000,
+      maxGlobalShortSize: 15 * 1000 * 1000,
+      openInterestLimitLong: 80 * 1000 * 1000,
+      openInterestLimitShort: 50 * 1000 * 1000,
+      maxOpenInterestLong: 75 * 1000 * 1000,
+      maxOpenInterestShort: 50 * 1000 * 1000,
+      openInterestIncrementLong: 100 * 1000,
+      openInterestIncrementShort: 50 * 1000,
+      maxLiquidityThresholdLong: 15 * 1000 * 1000,
+      maxLiquidityThresholdShort: 8 * 1000 * 1000,
+      minLiquidityThresholdLong: 12 * 1000 * 1000,
+      minLiquidityThresholdShort: 5 * 1000 * 1000,
+    },
     wbnb: {
       name: "wbnb",
       address: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2", // TODO
@@ -636,10 +664,10 @@ module.exports = {
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
     },
-    wbtc: {
-      name: "wbtc",
+    btc: {
+      name: "btc",
       address: "0xb19C12715134bee7c4b1Ca593ee9E430dABe7b56", // TODO
-      decimals: 18,
+      decimals: 8,
       priceFeed: "0x5741306c21795FdCBb9b265Ea0255F499DFe515C",
       priceDecimals: 8,
       stable: false,

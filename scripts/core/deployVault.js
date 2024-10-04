@@ -6,7 +6,7 @@ const { getNetwork, getDeployFilteredInfo } = require("../shared/syncParams")
 const { chainInfo } = require('../networks/chain')
 
 module.exports = async function () {
-  const { imple: nativeToken } = getDeployFilteredInfo("weth")
+  const { imple: nativeToken } = getDeployFilteredInfo("nativeToken")
 
   await deployContract("Vault", [])
 

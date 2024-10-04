@@ -8,7 +8,7 @@ async function deployPositionManager() {
   const { imple: timelockAddr } = getDeployFilteredInfo("Timelock");
   const { imple: routerAddr } = getDeployFilteredInfo("Router");
   const { imple: shortsTrackerAddr } = getDeployFilteredInfo("ShortsTracker");
-  const { imple: wethAddr } = getDeployFilteredInfo("WETH");
+  const { imple: wethAddr } = getDeployFilteredInfo("nativeToken");
   const { imple: orderBookAddr } = getDeployFilteredInfo("OrderBook");
   const { imple: referralStorageAddr } =
     getDeployFilteredInfo("ReferralStorage");
