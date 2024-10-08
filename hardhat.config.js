@@ -28,7 +28,9 @@ const {
   PEGASUS_API_KEY,
   PHOENIX_RPC,
   PHOENIX_DEPLOY_KEY,
-  PHOENIX_API_KEY
+  PHOENIX_API_KEY,
+  BSC_DEPLOY_KEY,
+  BSC_URL
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -82,6 +84,11 @@ module.exports = {
       chainId: 97,
       accounts: [BSC_TESTNET_DEPLOY_KEY]
     },
+    bsc: {
+      url: BSC_URL,
+      chainId: 56,
+      accounts: [BSC_DEPLOY_KEY]
+    }
   },
   etherscan: {
     apiKey: {

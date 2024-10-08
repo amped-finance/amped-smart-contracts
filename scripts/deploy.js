@@ -9,6 +9,7 @@ const { deploy_localhost } = require("./networks/localhost")
 const { deploy_pegasus } = require('./networks/pegasus')
 const { deploy_phoenix } = require('./networks/phoenix')
 const { deploy_bsctestnet } = require('./networks/bsctestnet')
+const { deploy_bsc } = require("./networks/bsc")
 const { setNetwork } = require("./shared/syncParams")
 
 async function main() {
@@ -36,6 +37,8 @@ async function main() {
     await deploy_phoenix()
   }else if (hre.network.name === "bsctestnet") {
     await deploy_bsctestnet()
+  } else if (hre.network.name === "bsc") {
+    await deploy_bsc()
   }
 }
 
