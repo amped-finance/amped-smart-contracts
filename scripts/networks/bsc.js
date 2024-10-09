@@ -74,7 +74,7 @@ const deploy_bsc = async () => {
   });
   syncDeployInfo("nativeToken", {
     name: "nativeToken",
-    imple: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2"
+    imple: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
   });
   syncDeployInfo("GMX", {
     name: "GMX",
