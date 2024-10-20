@@ -80,7 +80,7 @@ module.exports = {
     },
     bsctestnet: {
       url: BSC_TESTNET_URL,
-      // gasPrice: 10000000000,
+      gasPrice: 3000000000,
       chainId: 97,
       accounts: [BSC_TESTNET_DEPLOY_KEY]
     },
