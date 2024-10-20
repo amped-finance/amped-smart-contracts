@@ -408,10 +408,10 @@ module.exports = {
   bsctestnet: {
     usdt: {
       name: "usdt",
-      address: "0x337610d27c682e347c9cd60bd4b3b107c9d34ddd", // TODO
-      decimals: 6,
-      priceFeed: "0xEca2605f0BCF2BA5966372C99837b1F182d3D620",
-      priceDecimals: 8,
+      address: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd", // TODO
+      decimals: 18,
+      priceFeed: "0x148D70214D9b92843078b7503a65a1825D315Fdb",
+      priceDecimals: 10,
       stable: true,
       tokenWeight: 6000,
       minProfitBps: 0,
@@ -434,12 +434,12 @@ module.exports = {
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
     },
-    eth: {
-      name: "eth",
-      address: "0x1958f7C067226c7C8Ac310Dc994D0cebAbfb2B02", // TODO
+    maga: {
+      name: "maga",
+      address: "0x9F82E96D983011Df21bF642C0C34daDD820666b2", // TODO
       decimals: 18,
-      priceFeed: "0x143db3CEEfbdfe5631aDD3E50f7614B6ba708BA7",
-      priceDecimals: 8,
+      priceFeed: "0xDaBD956FDf97b381e5358DB93b1C772e5Bdcc504",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 300,
@@ -466,8 +466,8 @@ module.exports = {
       name: "wbnb",
       address: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2", // TODO
       decimals: 18,
-      priceFeed: "0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526",
-      priceDecimals: 8,
+      priceFeed: "0x4726f3dffe233E63b3eBA6B06Dc1Ce8A7c4e7283",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 300,
@@ -490,12 +490,68 @@ module.exports = {
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
     },
-    btc: {
-      name: "btc",
-      address: "0xb19C12715134bee7c4b1Ca593ee9E430dABe7b56", // TODO
-      decimals: 8,
-      priceFeed: "0x5741306c21795FdCBb9b265Ea0255F499DFe515C",
-      priceDecimals: 8,
+    cake: {
+      name: "cake",
+      address: "0x8d008B313C1d6C7fE2982F62d32Da7507cF43551", // TODO
+      decimals: 18,
+      priceFeed: "0x22eFEB944d65D982cA871Ff702a2eA8a0BCFBafC",
+      priceDecimals: 10,
+      stable: false,
+      tokenWeight: 10000,
+      minProfitBps: 200,
+      maxUsdgAmount: 0, //10 * 1000 * 1000,
+      bufferAmount: 1 * 1000 * 1000,
+      isStable: false,
+      isShortable: true,
+      fastPricePrecision: 1000,
+      maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
+      maxGlobalLongSize: 30 * 1000 * 1000,
+      maxGlobalShortSize: 15 * 1000 * 1000,
+      openInterestLimitLong: 80 * 1000 * 1000,
+      openInterestLimitShort: 50 * 1000 * 1000,
+      maxOpenInterestLong: 75 * 1000 * 1000,
+      maxOpenInterestShort: 50 * 1000 * 1000,
+      openInterestIncrementLong: 100 * 1000,
+      openInterestIncrementShort: 50 * 1000,
+      maxLiquidityThresholdLong: 15 * 1000 * 1000,
+      maxLiquidityThresholdShort: 8 * 1000 * 1000,
+      minLiquidityThresholdLong: 12 * 1000 * 1000,
+      minLiquidityThresholdShort: 5 * 1000 * 1000,
+    },
+    pepe: {
+      name: "pepe",
+      address: "0x8aecbFbDd9BBe9370F6851B348d35F0583624fBe", // TODO
+      decimals: 18,
+      priceFeed: "0xe7482eb0d7ea5b300CdA609b45f1085BceeACFDF",
+      priceDecimals: 10,
+      stable: false,
+      tokenWeight: 10000,
+      minProfitBps: 200,
+      maxUsdgAmount: 0, //10 * 1000 * 1000,
+      bufferAmount: 1 * 1000 * 1000,
+      isStable: false,
+      isShortable: true,
+      fastPricePrecision: 1000,
+      maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
+      maxGlobalLongSize: 30 * 1000 * 1000,
+      maxGlobalShortSize: 15 * 1000 * 1000,
+      openInterestLimitLong: 80 * 1000 * 1000,
+      openInterestLimitShort: 50 * 1000 * 1000,
+      maxOpenInterestLong: 75 * 1000 * 1000,
+      maxOpenInterestShort: 50 * 1000 * 1000,
+      openInterestIncrementLong: 100 * 1000,
+      openInterestIncrementShort: 50 * 1000,
+      maxLiquidityThresholdLong: 15 * 1000 * 1000,
+      maxLiquidityThresholdShort: 8 * 1000 * 1000,
+      minLiquidityThresholdLong: 12 * 1000 * 1000,
+      minLiquidityThresholdShort: 5 * 1000 * 1000,
+    },
+    floki: {
+      name: "floki",
+      address: "0xa49A47C4864FEc0b498bCC4E082996a04Be55804", // TODO
+      decimals: 18,
+      priceFeed: "0x80429bD4B2ED5b1dbb8E724FecAFc053f2f4463b",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 200,

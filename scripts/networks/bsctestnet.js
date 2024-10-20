@@ -26,19 +26,27 @@ const directPoolDeposit = require("../core/directPoolDeposit");
 const deploy_bsctestnet = async () => {
   syncDeployInfo("usdt", {
     name: "usdt",
-    imple: "0x337610d27c682e347c9cd60bd4b3b107c9d34ddd",
+    imple: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
   });
   syncDeployInfo("wbnb", {
     name: "wbnb",
     imple: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2",
   });
-  syncDeployInfo("eth", {
-    name: "eth",
-    imple: "0x1958f7C067226c7C8Ac310Dc994D0cebAbfb2B02",
+  syncDeployInfo("maga", {
+    name: "maga",
+    imple: "0x9F82E96D983011Df21bF642C0C34daDD820666b2",
   });
-  syncDeployInfo("btc", {
-    name: "btc",
-    imple: "0xb19C12715134bee7c4b1Ca593ee9E430dABe7b56",
+  syncDeployInfo("pepe", {
+    name: "pepe",
+    imple: "0x8aecbFbDd9BBe9370F6851B348d35F0583624fBe",
+  });
+  syncDeployInfo("floki", {
+    name: "floki",
+    imple: "0xa49A47C4864FEc0b498bCC4E082996a04Be55804",
+  });
+  syncDeployInfo("cake", {
+    name: "cake",
+    imple: "0x8d008B313C1d6C7fE2982F62d32Da7507cF43551",
   });
   syncDeployInfo("MultiSigner1", {
     name: "MultiSigner1",
