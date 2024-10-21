@@ -34,7 +34,7 @@ const deploy_bsctestnet = async () => {
   });
   syncDeployInfo("maga", {
     name: "maga",
-    imple: "0x9F82E96D983011Df21bF642C0C34daDD820666b2",
+    imple: "0x6cB798a28A7381E00dB35DF36E78FBdEE283DbC1",
   });
   syncDeployInfo("pepe", {
     name: "pepe",

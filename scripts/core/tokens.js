@@ -718,7 +718,7 @@ module.exports = {
     },
     maga: {
       name: "maga",
-      address: "0x4ea98c1999575aaadfb38237dd015c5e773f75a2", // TODO
+      address: "0x6cB798a28A7381E00dB35DF36E78FBdEE283DbC1", // TODO
       decimals: 9,
       priceFeed: "0xfA41Ec0B4520f8CE0b488217254aE3B3139FC594",
       priceDecimals: 8,
