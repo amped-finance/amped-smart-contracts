@@ -94,7 +94,7 @@ module.exports = {
     apiKey: {
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
-      apiKey: BSCSCAN_API_KEY
+      bsctestnet: BSCSCAN_API_KEY
     },
     customChains: [
       {
@@ -111,6 +111,14 @@ module.exports = {
         urls: {
           apiURL: "https://phoenix.lightlink.io/api",
           browserURL: "https://phoenix.lightlink.io",
+        },
+      },
+      {
+        network: "bsctestnet",
+        chainId: 97,
+        urls: {
+          apiURL: "https://api-testnet.bscscan.com/api",
+          browserURL: "https://testnet.bscscan.com",
         },
       },
     ]
