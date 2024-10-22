@@ -436,7 +436,7 @@ module.exports = {
     },
     maga: {
       name: "maga",
-      address: "0x9F82E96D983011Df21bF642C0C34daDD820666b2", // TODO
+      address: "0x6cB798a28A7381E00dB35DF36E78FBdEE283DbC1", // TODO
       decimals: 18,
       priceFeed: "0xDaBD956FDf97b381e5358DB93b1C772e5Bdcc504",
       priceDecimals: 10,
@@ -531,7 +531,7 @@ module.exports = {
       bufferAmount: 1 * 1000 * 1000,
       isStable: false,
       isShortable: true,
-      fastPricePrecision: 1000,
+      fastPricePrecision: 10000000000,
       maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
       maxGlobalLongSize: 30 * 1000 * 1000,
       maxGlobalShortSize: 15 * 1000 * 1000,
@@ -559,7 +559,7 @@ module.exports = {
       bufferAmount: 1 * 1000 * 1000,
       isStable: false,
       isShortable: true,
-      fastPricePrecision: 1000,
+      fastPricePrecision: 10000000000,
       maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
       maxGlobalLongSize: 30 * 1000 * 1000,
       maxGlobalShortSize: 15 * 1000 * 1000,
@@ -673,7 +673,7 @@ module.exports = {
       bufferAmount: 1 * 1000 * 1000,
       isStable: false,
       isShortable: true,
-      fastPricePrecision: 1000,
+      fastPricePrecision: 10000000000,
       maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
       maxGlobalLongSize: 30 * 1000 * 1000,
       maxGlobalShortSize: 15 * 1000 * 1000,
@@ -701,7 +701,7 @@ module.exports = {
       bufferAmount: 1 * 1000 * 1000,
       isStable: false,
       isShortable: true,
-      fastPricePrecision: 1000,
+      fastPricePrecision: 10000000000,
       maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
       maxGlobalLongSize: 30 * 1000 * 1000,
       maxGlobalShortSize: 15 * 1000 * 1000,
