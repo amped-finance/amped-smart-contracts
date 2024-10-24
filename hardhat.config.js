@@ -30,6 +30,7 @@ const {
   PHOENIX_DEPLOY_KEY,
   PHOENIX_API_KEY,
   BSC_DEPLOY_KEY,
+  BSC_RPC,
   BSC_URL
 } = require("./env.json")
 
@@ -85,7 +86,7 @@ module.exports = {
       accounts: [BSC_TESTNET_DEPLOY_KEY]
     },
     bsc: {
-      url: BSC_URL,
+      url: BSC_RPC,
       chainId: 56,
       accounts: [BSC_DEPLOY_KEY]
     }
@@ -94,7 +95,7 @@ module.exports = {
     apiKey: {
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
-      apiKey: BSCSCAN_API_KEY
+      bsc: BSCSCAN_API_KEY
     },
     customChains: [
       {
@@ -111,6 +112,14 @@ module.exports = {
         urls: {
           apiURL: "https://phoenix.lightlink.io/api",
           browserURL: "https://phoenix.lightlink.io",
+        },
+      },
+      {
+        network: "bsc",
+        chainId: 56,
+        urls: {
+          apiURL: "https://api.bscscan.com/api",
+          browserURL: "https://bscscan.com",
         },
       },
     ]
