@@ -44,10 +44,6 @@ const deploy_bsc = async () => {
     name: "floki",
     imple: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
   });
-  syncDeployInfo("maga", {
-    name: "maga",
-    imple: "0x4ea98c1999575aaadfb38237dd015c5e773f75a2",
-  });
   syncDeployInfo("MultiSigner1", {
     name: "MultiSigner1",
     imple: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904",
@@ -74,7 +70,7 @@ const deploy_bsc = async () => {
   });
   syncDeployInfo("nativeToken", {
     name: "nativeToken",
-    imple: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2"
+    imple: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
   });
   syncDeployInfo("GMX", {
     name: "GMX",

@@ -524,8 +524,8 @@ module.exports = {
       name: "wbnb",
       address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // TODO
       decimals: 18,
-      priceFeed: "0xfBEdfEaD3F5CB0231B9DB7edDc24b63806D1Aa4b",
-      priceDecimals: 8,
+      priceFeed: "0x22eFEB944d65D982cA871Ff702a2eA8a0BCFBafC",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 300,
@@ -552,8 +552,8 @@ module.exports = {
       name: "bscusd",
       address: "0x55d398326f99059ff775485246999027b3197955", // TODO
       decimals: 18,
-      priceFeed: "0xdE6a81C3AF046D717cE968BE966699F8761fbac9",
-      priceDecimals: 8,
+      priceFeed: "0xDaBD956FDf97b381e5358DB93b1C772e5Bdcc504",
+      priceDecimals: 10,
       stable: true,
       tokenWeight: 6000,
       minProfitBps: 0,
@@ -580,8 +580,8 @@ module.exports = {
       name: "cake",
       address: "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // TODO
       decimals: 18,
-      priceFeed: "0x93cb303DCf8739cdfCB996a30050A86bc7008A9E",
-      priceDecimals: 8,
+      priceFeed: "0x4726f3dffe233E63b3eBA6B06Dc1Ce8A7c4e7283",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 300,
@@ -608,8 +608,8 @@ module.exports = {
       name: "pepe",
       address: "0x25d887ce7a35172c62febfd67a1856f20faebb00", // TODO
       decimals: 18,
-      priceFeed: "0x7FC5eFE4A7CA6EC49E33e366110719Eb8548F838",
-      priceDecimals: 8,
+      priceFeed: "0xD71b40bf55736bC6D80Ff4c54610Fd4ff3c83E03",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 300,
@@ -617,7 +617,7 @@ module.exports = {
       bufferAmount: 1 * 1000 * 1000,
       isStable: false,
       isShortable: true,
-      fastPricePrecision: 1000,
+      fastPricePrecision: 10000000000,
       maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
       maxGlobalLongSize: 30 * 1000 * 1000,
       maxGlobalShortSize: 15 * 1000 * 1000,
@@ -636,8 +636,8 @@ module.exports = {
       name: "floki",
       address: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e", // TODO
       decimals: 9,
-      priceFeed: "0x3d20D57B4933A3F34b96C005849e327Ea14C98e2",
-      priceDecimals: 8,
+      priceFeed: "0xa0d4305D6af06CE426EdC0a4DCEc43619D513C91",
+      priceDecimals: 10,
       stable: false,
       tokenWeight: 10000,
       minProfitBps: 300,
@@ -645,7 +645,7 @@ module.exports = {
       bufferAmount: 1 * 1000 * 1000,
       isStable: false,
       isShortable: true,
-      fastPricePrecision: 1000,
+      fastPricePrecision: 10000000000,
       maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
       maxGlobalLongSize: 30 * 1000 * 1000,
       maxGlobalShortSize: 15 * 1000 * 1000,
@@ -659,34 +659,6 @@ module.exports = {
       maxLiquidityThresholdShort: 8 * 1000 * 1000,
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
-    },
-    maga: {
-      name: "maga",
-      address: "0x4ea98c1999575aaadfb38237dd015c5e773f75a2", // TODO
-      decimals: 9,
-      priceFeed: "0xfA41Ec0B4520f8CE0b488217254aE3B3139FC594",
-      priceDecimals: 8,
-      stable: false,
-      tokenWeight: 10000,
-      minProfitBps: 300,
-      maxUsdgAmount: 0, //10 * 1000 * 1000,
-      bufferAmount: 1 * 1000 * 1000,
-      isStable: false,
-      isShortable: true,
-      fastPricePrecision: 1000,
-      maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
-      maxGlobalLongSize: 30 * 1000 * 1000,
-      maxGlobalShortSize: 15 * 1000 * 1000,
-      openInterestLimitLong: 80 * 1000 * 1000,
-      openInterestLimitShort: 50 * 1000 * 1000,
-      maxOpenInterestLong: 75 * 1000 * 1000,
-      maxOpenInterestShort: 50 * 1000 * 1000,
-      openInterestIncrementLong: 100 * 1000,
-      openInterestIncrementShort: 50 * 1000,
-      maxLiquidityThresholdLong: 15 * 1000 * 1000,
-      maxLiquidityThresholdShort: 8 * 1000 * 1000,
-      minLiquidityThresholdLong: 12 * 1000 * 1000,
-      minLiquidityThresholdShort: 5 * 1000 * 1000,
-    },
+    }
   }
 };
