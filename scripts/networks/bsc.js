@@ -46,27 +46,27 @@ const deploy_bsc = async () => {
   });
   syncDeployInfo("MultiSigner1", {
     name: "MultiSigner1",
-    imple: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904",
+    imple: "0x3F3d5a2d1117F404Bf561Ec3D13271017253043b",
   });
   syncDeployInfo("MultiSigner2", {
     name: "MultiSigner2",
-    imple: "0xf17b5A7Fe677B705f6Dc27d6D2B0079e305dE78f",
+    imple: "0x98EC3cFF51B7EDD07f1f281393755bd4e8798c87",
   });
   syncDeployInfo("MultiSigner3", {
     name: "MultiSigner3",
-    imple: "0x52E68B8187b3B9688fF4cfDF2526B908a1BF19A0",
+    imple: "0xA4D6E4e92572Ca2Ba6857F5f44Caf5Be21425b88",
   });
   syncDeployInfo("MultiSigner4", {
     name: "MultiSigner4",
-    imple: "0x17A8132077eA63afa4c64E4fEF86C4ffc1e38548",
+    imple: "0x16866864a568B2dd42A19B638b3Ae808baaE54fC",
   });
   syncDeployInfo("MultiSigner5", {
     name: "MultiSigner5",
-    imple: "0x989B2F4Ff4BB7F74f6642046fC0926a009a4bFCd",
+    imple: "0x1054D0B60Ea7Acb24044a2c0121b31baF54115a8",
   });
   syncDeployInfo("MultiSigner6", {
     name: "MultiSigner6",
-    imple: "0xa9B8CeeE2b2F9404F61B21B34F8AEC144f53888f",
+    imple: "0xd3e03D9Ec6aEc5889f5A78f1D9447e3c0B241086",
   });
   syncDeployInfo("nativeToken", {
     name: "nativeToken",
