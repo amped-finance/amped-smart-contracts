@@ -31,7 +31,9 @@ const {
   PHOENIX_API_KEY,
   BSC_DEPLOY_KEY,
   BSC_RPC,
-  BSC_URL
+  SONIC_RPC,
+  SONIC_DEPLOY_KEY,
+  SONIC_API_KEY
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -57,7 +59,7 @@ module.exports = {
       timeout: 120000,
       accounts: {
         // mnemonic: "near cruel jar space pond motion evidence shed coach more drama pyramid",
-        mnemonic: "test test test test test test test test test test test junk",
+        mnemonic: "test test test test test test test test test test test test junk",
         path: "m/44'/60'/0'/0",
         initialIndex: 0,
         count: 10,
@@ -89,13 +91,19 @@ module.exports = {
       url: BSC_RPC,
       chainId: 56,
       accounts: [BSC_DEPLOY_KEY]
+    },
+    sonic: {
+      url: SONIC_RPC,
+      chainId: 146,
+      accounts: [SONIC_DEPLOY_KEY]
     }
   },
   etherscan: {
     apiKey: {
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
-      bsc: BSCSCAN_API_KEY
+      bsc: BSCSCAN_API_KEY,
+      sonic: SONIC_API_KEY
     },
     customChains: [
       {
@@ -122,6 +130,14 @@ module.exports = {
           browserURL: "https://bscscan.com",
         },
       },
+      {
+        network: "sonic",
+        chainId: 146,
+        urls: {
+          apiURL: "https://api.sonicscan.org/api",
+          browserURL: "https://sonicscan.org"
+        }
+      }
     ]
   },
   solidity: {
