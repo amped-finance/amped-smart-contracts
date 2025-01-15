@@ -8,20 +8,28 @@ const {
   PEGASUS_RPC,
   PHOENIX_DEPLOY_KEY,
   PHOENIX_RPC,
+  BSC_TESTNET_URL,
+  BSC_TESTNET_DEPLOY_KEY,
+  BSC_DEPLOY_KEY
 } = require("../../env.json");
 const { ADDRESS_ZERO } = require('@uniswap/v3-sdk');
 
 const providers = {
   pegasus: new ethers.providers.JsonRpcProvider(PEGASUS_RPC),
   phoenix: new ethers.providers.JsonRpcProvider(PHOENIX_RPC),
+  bsctestnet: new ethers.providers.JsonRpcProvider(BSC_TESTNET_URL),
+  bsc: new ethers.providers.JsonRpcProvider(BSC_DEPLOY_KEY),
 }
 
 const signers = {
   pegasus: new ethers.Wallet(PEGASUS_DEPLOY_KEY).connect(providers.pegasus),
   phoenix: new ethers.Wallet(PHOENIX_DEPLOY_KEY).connect(providers.phoenix),
+  bsctestnet: new ethers.Wallet(BSC_TESTNET_DEPLOY_KEY).connect(providers.bsctestnet),
+  bsc: new ethers.Wallet(BSC_DEPLOY_KEY).connect(providers.bsc),
 }
 
 const { syncDeployInfo, addGasUsed } = require("./syncParams");
+const { bsctestnet } = require("../core/tokens");
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));

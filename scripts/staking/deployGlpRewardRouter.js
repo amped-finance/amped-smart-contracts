@@ -2,7 +2,7 @@ const { deployContract, contractAt, sendTxn, getFrameSigner } = require("../shar
 const { getDeployFilteredInfo } = require("../shared/syncParams");
 
 async function deployGlpRewardRouter() {
-  const nativeToken = getDeployFilteredInfo("WETH").imple
+  const nativeToken = getDeployFilteredInfo("nativeToken").imple
   const glp = getDeployFilteredInfo("GLP").imple
   const feeGlpTracker = getDeployFilteredInfo("RewardTrackerFeeGLP").imple
   const stakedGlpTracker = getDeployFilteredInfo("RewardTrackerFeeStakedGLP").imple

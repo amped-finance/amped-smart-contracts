@@ -1,3 +1,5 @@
+const { bsctestnet } = require("../core/tokens")
+
 const chainInfo = {
     pegasus: {
         gmx: {
@@ -99,154 +101,104 @@ const chainInfo = {
             symbol: "vALP"
         }
     },
-    localhost: {
-        gmx: {
-            name: "CRUST",
-            symbol: "CRUST"
-        },
-        esgmx: {
-            name: "Escrowed CRUST",
-            symbol: "zCRUST"
-        },
-        esgmxiou: {
-            name: "zCRUST IOU",
-            symbol: "zCRUST:IOU"
-        },
-        bngmx: {
-            name: "Bonus CRUST",
-            symbol: "bnCRUST"
-        },
-        glp: {
-            name: "CRUST LP",
-            symbol: "CLP"
-        },
-        sgmx: {
-            name: "Staked CRUST",
-            symbol: "sCRUST",
-        },
-        sbgmx: {
-            name: "Staked + Bonus CRUST",
-            symbol: "sbCRUST",
-        },
-        sbfgmx: {
-            name: "Staked + Bonus + Fee CRUST",
-            symbol: "sbfCRUST"
-        },
-        fglp: {
-            name: "Fee CLP",
-            symbol: "fCLP"
-        },
-        fsglp: {
-            name: "Fee + Staked CLP",
-            symbol: "fsCLP"
-        },
-        vgmx: {
-            name: "Vested CRUST",
-            symbol: "vCRUST"
-        },
-        vglp: {
-            name: "Vested CLP",
-            symbol: "vCLP"
-        }
-    },
     bsctestnet: {
         gmx: {
-            name: "Mantis",
-            symbol: "MANTIS"
+            name: "Amped Finance",
+            symbol: "AMP"
         },
         esgmx: {
-            name: "Escrowed Mantis",
-            symbol: "zMANTIS"
+            name: "Escrowed AMP",
+            symbol: "esAMP"
         },
         esgmxiou: {
-            name: "zMANTIS IOU",
-            symbol: "zMANTIS:IOU"
+            name: "esAMP IOU",
+            symbol: "esAMP:IOU"
         },
         bngmx: {
-            name: "Bonus Mantis",
-            symbol: "bnMANTIS"
+            name: "Bonus AMP",
+            symbol: "bnAMP"
         },
         glp: {
-            name: "Mantis LP",
-            symbol: "MLP"
+            name: "Amped LP",
+            symbol: "ALP"
         },
         sgmx: {
-            name: "Staked Mantis",
-            symbol: "sMANTIS",
+            name: "Staked AMP",
+            symbol: "sAMP",
         },
         sbgmx: {
-            name: "Staked + Bonus Mantis",
-            symbol: "sbMANTIS",
+            name: "Staked + Bonus AMP",
+            symbol: "sbAMP",
         },
         sbfgmx: {
-            name: "Staked + Bonus + Fee Mantis",
-            symbol: "sbfMANTIS"
+            name: "Staked + Bonus + Fee AMP",
+            symbol: "sbfAMP"
         },
         fglp: {
-            name: "Fee MLP",
-            symbol: "fMLP"
+            name: "Fee ALP",
+            symbol: "fALP"
         },
         fsglp: {
-            name: "Fee + Staked MLP",
-            symbol: "fsMLP"
+            name: "Fee + Staked ALP",
+            symbol: "fsALP"
         },
         vgmx: {
-            name: "Vested Mantis",
-            symbol: "vMANTIS"
+            name: "Vested AMP",
+            symbol: "vAMP"
         },
         vglp: {
-            name: "Vested MLP",
-            symbol: "vMLP"
+            name: "Vested ALP",
+            symbol: "vALP"
         }
     },
-    shibarium: {
+    bsc: {
         gmx: {
-            name: "Mantis",
-            symbol: "MANTIS"
+            name: "Amped Finance",
+            symbol: "AMP"
         },
         esgmx: {
-            name: "Escrowed Mantis",
-            symbol: "zMANTIS"
+            name: "Escrowed AMP",
+            symbol: "esAMP"
         },
         esgmxiou: {
-            name: "zMANTIS IOU",
-            symbol: "zMANTIS:IOU"
+            name: "esAMP IOU",
+            symbol: "esAMP:IOU"
         },
         bngmx: {
-            name: "Bonus Mantis",
-            symbol: "bnMANTIS"
+            name: "Bonus AMP",
+            symbol: "bnAMP"
         },
         glp: {
-            name: "Mantis LP",
-            symbol: "MLP"
+            name: "Amped LP",
+            symbol: "ALP"
         },
         sgmx: {
-            name: "Staked Mantis",
-            symbol: "sMANTIS",
+            name: "Staked AMP",
+            symbol: "sAMP",
         },
         sbgmx: {
-            name: "Staked + Bonus Mantis",
-            symbol: "sbMANTIS",
+            name: "Staked + Bonus AMP",
+            symbol: "sbAMP",
         },
         sbfgmx: {
-            name: "Staked + Bonus + Fee Mantis",
-            symbol: "sbfMANTIS"
+            name: "Staked + Bonus + Fee AMP",
+            symbol: "sbfAMP"
         },
         fglp: {
-            name: "Fee MLP",
-            symbol: "fMLP"
+            name: "Fee ALP",
+            symbol: "fALP"
         },
         fsglp: {
-            name: "Fee + Staked MLP",
-            symbol: "fsMLP"
+            name: "Fee + Staked ALP",
+            symbol: "fsALP"
         },
         vgmx: {
-            name: "Vested Mantis",
-            symbol: "vMANTIS"
+            name: "Vested AMP",
+            symbol: "vAMP"
         },
         vglp: {
-            name: "Vested MLP",
-            symbol: "vMLP"
+            name: "Vested ALP",
+            symbol: "vALP"
         }
     }
 }

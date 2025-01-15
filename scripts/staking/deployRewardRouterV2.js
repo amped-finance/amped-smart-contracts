@@ -5,7 +5,7 @@ const { getNetwork } = require('../shared/syncParams')
 
 async function deployRewardRouterV2() {
   const signer = await getFrameSigner()
-  const { imple: nativeToken } = getDeployFilteredInfo("WETH")
+  const { imple: nativeToken } = getDeployFilteredInfo("nativeToken")
 
   const vestingDuration = 365 * 24 * 60 * 60
 
