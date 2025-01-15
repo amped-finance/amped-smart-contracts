@@ -21,63 +21,74 @@ const deployPriceFeedExt = require("../core/deployPriceFeedExt");
 const deployGlpRewardRouter = require("../staking/deployGlpRewardRouter");
 const deployMulticall = require("../core/deployMulticall");
 const directPoolDeposit = require("../core/directPoolDeposit");
-const configureNewToken = require("../peripherals/configureNewToken");
+// const configureNewToken = require("../peripherals/configureNewToken");
 
 const deploy_bsctestnet = async () => {
-  // syncDeployInfo("USDT", {
-  //   name: "USDT",
-  //   imple: "0x81bCEa03678D1CEF4830942227720D542Aa15817",
-  // });
-  // syncDeployInfo("MultiSigner1", {
-  //   name: "MultiSigner1",
-  //   imple: "0xdfAf8d7a9A71736f7516eeE20C54a25AA7201D2e",
-  // });
-  // syncDeployInfo("MultiSigner2", {
-  //   name: "MultiSigner2",
-  //   imple: "0xaff1a4950b91d742c180718c39ca61125112d985",
-  // });
-  // syncDeployInfo("MultiSigner3", {
-  //   name: "MultiSigner3",
-  //   imple: "0x7aF25b297FA77cE14b03Bf710216C6355e9cB57a",
-  // });
-  // syncDeployInfo("MultiSigner4", {
-  //   name: "MultiSigner4",
-  //   imple: "0x02B5d223eB5fB990Aa83Ff1F7098abD9887d40a9",
-  // });
-  // syncDeployInfo("MultiSigner5", {
-  //   name: "MultiSigner5",
-  //   imple: "0xa34153725cB218c30996f05E2F7A1ec0f495192E",
-  // });
-  // syncDeployInfo("MultiSigner6", {
-  //   name: "MultiSigner6",
-  //   imple: "0xCf58ED19ccdB5f52ADDaFa6F46443be8A1E160F8",
-  // });
-  // syncDeployInfo("WETH", {
-  //   name: "WETH",
-  //   imple: "0x191E94fa59739e188dcE837F7f6978d84727AD01",
-  // });
-  // await deployMulticall()
-  // await deployPriceFeedExt()
+  syncDeployInfo("usdt", {
+    name: "usdt",
+    imple: "0x337610d27c682e347c9cd60bd4b3b107c9d34ddd",
+  });
+  syncDeployInfo("wbnb", {
+    name: "wbnb",
+    imple: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2",
+  });
+  syncDeployInfo("eth", {
+    name: "eth",
+    imple: "0x1958f7C067226c7C8Ac310Dc994D0cebAbfb2B02",
+  });
+  syncDeployInfo("btc", {
+    name: "btc",
+    imple: "0xb19C12715134bee7c4b1Ca593ee9E430dABe7b56",
+  });
+  syncDeployInfo("MultiSigner1", {
+    name: "MultiSigner1",
+    imple: "0xAc29aCc26F0E1A256C1870F75e3308a05C045C58",
+  });
+  syncDeployInfo("MultiSigner2", {
+    name: "MultiSigner2",
+    imple: "0x9F82E96D983011Df21bF642C0C34daDD820666b2",
+  });
+  syncDeployInfo("MultiSigner3", {
+    name: "MultiSigner3",
+    imple: "0x7C669A39c6c6c3096b955cbdedf113A3B73c19C3",
+  });
+  syncDeployInfo("MultiSigner4", {
+    name: "MultiSigner4",
+    imple: "0x99692AeF1eC9FBCC09F9C5bD2640d8d1235e7995",
+  });
+  syncDeployInfo("MultiSigner5", {
+    name: "MultiSigner5",
+    imple: "0x502aC525a1a0f57c4b5327712abb67b1F605C9E7",
+  });
+  syncDeployInfo("MultiSigner6", {
+    name: "MultiSigner6",
+    imple: "0x51aa1BE4E624c3A2C80807300A0000aCFf4Ec917",
+  });
+  syncDeployInfo("nativeToken", {
+    name: "nativeToken",
+    imple: "0x612777Eea37a44F7a95E3B101C39e1E2695fa6C2"
+  });
+  await deployMulticall()
 
-  // await deployGMX()
-  // await deployVault()
-  // await deployVaultReader()
-  // await deployReader()
-  // await deployRewardReader()
-  // await deployTokens()
-  // await deployRewardRouterV2()
-  // await deployOrderBook()
-  // await deployOrderBookReader()
-  // await deployReferralStorage()
-  // await deployReferralReader()
-  // await deployTokenManager()
-  // await deployPriceFeedTimelock()
-  // await deployTimelock()
-  // await deployShortsTrackerTimelock()
-  // await deployPositionRouter()
-  // await deployPositionManager()
-  // await deployPriceFeed()
-  // await deployGlpRewardRouter()
+  await deployGMX()
+  await deployVault()
+  await deployVaultReader()
+  await deployReader()
+  await deployRewardReader()
+  await deployTokens()
+  await deployRewardRouterV2()
+  await deployOrderBook()
+  await deployOrderBookReader()
+  await deployReferralStorage()
+  await deployReferralReader()
+  await deployTokenManager()
+  await deployPriceFeedTimelock()
+  await deployTimelock()
+  await deployShortsTrackerTimelock()
+  await deployPositionRouter()
+  await deployPositionManager()
+  await deployPriceFeed()
+  await deployGlpRewardRouter()
 
   // await directPoolDeposit('1000000000000000000') // 1 WETH
   // await configureNewToken()

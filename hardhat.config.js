@@ -6,13 +6,13 @@ require('@typechain/hardhat')
 const {
   // BSC_URL,
   // BSC_DEPLOY_KEY,
-  // BSCSCAN_API_KEY,
+  BSCSCAN_API_KEY,
   // POLYGONSCAN_API_KEY,
   // SNOWTRACE_API_KEY,
   // ARBISCAN_API_KEY,
   // ETHERSCAN_API_KEY,
-  // BSC_TESTNET_URL,
-  // BSC_TESTNET_DEPLOY_KEY,
+  BSC_TESTNET_URL,
+  BSC_TESTNET_DEPLOY_KEY,
   // ARBITRUM_TESTNET_DEPLOY_KEY,
   // ARBITRUM_TESTNET_URL,
   // ARBITRUM_DEPLOY_KEY,
@@ -28,7 +28,10 @@ const {
   PEGASUS_API_KEY,
   PHOENIX_RPC,
   PHOENIX_DEPLOY_KEY,
-  PHOENIX_API_KEY
+  PHOENIX_API_KEY,
+  BSC_DEPLOY_KEY,
+  BSC_RPC,
+  BSC_URL
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -76,17 +79,23 @@ module.exports = {
       chainId: 1890,
       accounts: [PHOENIX_DEPLOY_KEY],
     },
-    // bsctestnet: {
-    //   url: BSCTESTNET_RPC,
-    //   gasPrice: 10000000000,
-    //   chainId: 97,
-    //   accounts: [BSCTESTNET_DEPLOY_KEY]
-    // },
+    bsctestnet: {
+      url: BSC_TESTNET_URL,
+      // gasPrice: 10000000000,
+      chainId: 97,
+      accounts: [BSC_TESTNET_DEPLOY_KEY]
+    },
+    bsc: {
+      url: BSC_RPC,
+      chainId: 56,
+      accounts: [BSC_DEPLOY_KEY]
+    }
   },
   etherscan: {
     apiKey: {
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
+      bsc: BSCSCAN_API_KEY
     },
     customChains: [
       {
@@ -103,6 +112,14 @@ module.exports = {
         urls: {
           apiURL: "https://phoenix.lightlink.io/api",
           browserURL: "https://phoenix.lightlink.io",
+        },
+      },
+      {
+        network: "bsc",
+        chainId: 56,
+        urls: {
+          apiURL: "https://api.bscscan.com/api",
+          browserURL: "https://bscscan.com",
         },
       },
     ]

@@ -19,7 +19,7 @@ const getGasUsed = () => {
 }
 
 const getNetwork = () => {
-    return networkInfo.network
+    return networkInfo.network || "phoenix";
 }
 
 const getDeployInfo = () => {
