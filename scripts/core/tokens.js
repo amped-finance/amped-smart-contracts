@@ -722,7 +722,7 @@ module.exports = {
       name: "usdc",
       address: "0x29219dd400f2bf60e5a23d13be72b486d4038894", // TODO
       decimals: 6,
-      priceFeed: "0x578A3aFaC567b3D7F2Ac5C4A9b6A067AF1492075",
+      priceFeed: "0x30c1322F695c4E16393b46b339bB6Aa6cAcA5784",
       priceDecimals: 8,
       stable: true,
       tokenWeight: 6000,
@@ -750,7 +750,7 @@ module.exports = {
       name: "eurc",
       address: "0xe715cbA7B5cCb33790ceBFF1436809d36cb17E57", // TODO
       decimals: 6,
-      priceFeed: "0x6DD95B776CfcDB77c8E465862DC0AafbfB28737C",
+      priceFeed: "0x8BD55cA67D44C4FA08f5073e290e234432c455Ba",
       priceDecimals: 8,
       stable: true,
       tokenWeight: 6000,
@@ -778,7 +778,7 @@ module.exports = {
       name: "ws",
       address: "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38", // TODO
       decimals: 18,
-      priceFeed: "0x6ECfb8FF1C5A4b03AB0B6327d1b9B6f5Fa5F5fC8",
+      priceFeed: "0x15F38d12940e9c9F94e59419eBa636cA7Ecdff04",
       priceDecimals: 8,
       stable: false,
       tokenWeight: 12000,
@@ -806,7 +806,7 @@ module.exports = {
       name: "weth",
       address: "0x50c42deacd8fc9773493ed674b675be577f2634b", // TODO
       decimals: 18,
-      priceFeed: "0x53acB70d6e3156842dbeB7E212fC1C126AD4d7F5",
+      priceFeed: "0x53C0d2dC16d400A94d054E2dD5D0Dc216472173D",
       priceDecimals: 8,
       stable: false,
       tokenWeight: 10000,
