@@ -1,7 +1,7 @@
 const { deployContract, contractAt, sleep, sendTxn } = require("../shared/helpers")
 const { getNetwork } = require("../shared/syncParams")
 const tokenList = require('../core/tokens')
-const deployments = require('../deploy-phoenix.json')
+const deployments = require('../deploy-sonic.json')
 console.log("Loaded deployments:", deployments)
 
 // Helper function to get contract address
@@ -13,7 +13,9 @@ function getContractAddress(contractName) {
 async function configureNewToken() {
     console.log("Starting configuration...")
     
-    const network = getNetwork()
+    // Get the network from hardhat's runtime environment
+    const hre = require("hardhat");
+    const network = getNetwork(hre.network.name);
     console.log("Network:", network)
     
     const tokens = tokenList[network]

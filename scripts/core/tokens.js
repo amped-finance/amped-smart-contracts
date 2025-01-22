@@ -829,6 +829,34 @@ module.exports = {
       maxLiquidityThresholdShort: 8 * 1000 * 1000,
       minLiquidityThresholdLong: 12 * 1000 * 1000,
       minLiquidityThresholdShort: 5 * 1000 * 1000,
+    },
+    anon: {
+      name: "anon",
+      address: "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c", // TODO
+      decimals: 18,
+      priceFeed: "0xea13718A6955bd2dc3F261351F1Fda78aB74E25D",
+      priceDecimals: 8,
+      stable: false,
+      tokenWeight: 10000,
+      minProfitBps: 0,
+      maxUsdgAmount: 0, //10 * 1000 * 1000,
+      bufferAmount: 1 * 1000 * 1000,
+      isStable: false,
+      isShortable: true,
+      fastPricePrecision: 1000,
+      maxCumulativeDeltaDiff: 0.1 * 10 * 1000 * 1000, // 10%
+      maxGlobalLongSize: 30 * 1000 * 1000,
+      maxGlobalShortSize: 15 * 1000 * 1000,
+      openInterestLimitLong: 80 * 1000 * 1000,
+      openInterestLimitShort: 50 * 1000 * 1000,
+      maxOpenInterestLong: 75 * 1000 * 1000,
+      maxOpenInterestShort: 50 * 1000 * 1000,
+      openInterestIncrementLong: 100 * 1000,
+      openInterestIncrementShort: 50 * 1000,
+      maxLiquidityThresholdLong: 15 * 1000 * 1000,
+      maxLiquidityThresholdShort: 8 * 1000 * 1000,
+      minLiquidityThresholdLong: 12 * 1000 * 1000,
+      minLiquidityThresholdShort: 5 * 1000 * 1000,
     }
   }
 };

@@ -18,7 +18,10 @@ const getGasUsed = () => {
     return networkInfo.gasUsed
 }
 
-const getNetwork = () => {
+const getNetwork = (network) => {
+    if (network) {
+        setNetwork(network);
+    }
     return networkInfo.network || "phoenix";
 }
 
