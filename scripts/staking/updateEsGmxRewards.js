@@ -5,19 +5,19 @@ const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 
 const shouldSendTxn = true
 
-const monthlyEsGmxForGlpOnArb = expandDecimals(toInt("100"), 18)
-const monthlyEsGmxForGlpOnAvax = expandDecimals(toInt("100"), 18)
+const monthlyEsGmxForGlpOnArb = expandDecimals(toInt("0"), 18)
+const monthlyEsGmxForGlpOnAvax = expandDecimals(toInt("0"), 18)
 
 async function getStakedAmounts() {
-  const arbStakedGmxTracker = await contractAt("RewardTracker", "0x8210Da5171B10cB934CC8a658840c663aAFF43A4", signers.pegasus)
-  const arbStakedGmxAndEsGmx =await arbStakedGmxTracker.totalSupply()
+  const pegasusStakedGmxTracker = await contractAt("RewardTracker", "0x8210Da5171B10cB934CC8a658840c663aAFF43A4", signers.pegasus)
+  const pegasusStakedGmxAndEsGmx = await pegasusStakedGmxTracker.totalSupply()
 
-  const avaxStakedGmxTracker = await contractAt("RewardTracker", "0x3c9586567a429BA0467Bc63FD38ea71bB6B912E0", signers.phoenix)
-  const avaxStakedGmxAndEsGmx =await avaxStakedGmxTracker.totalSupply()
+  const phoenixStakedGmxTracker = await contractAt("RewardTracker", "0x3c9586567a429BA0467Bc63FD38ea71bB6B912E0", signers.phoenix)
+  const phoenixStakedGmxAndEsGmx = await phoenixStakedGmxTracker.totalSupply()
 
   return {
-    arbStakedGmxAndEsGmx,
-    avaxStakedGmxAndEsGmx
+    pegasusStakedGmxAndEsGmx: pegasusStakedGmxAndEsGmx,
+    phoenixStakedGmxAndEsGmx: phoenixStakedGmxAndEsGmx
   }
 }
 
@@ -31,8 +31,8 @@ async function getPegasusValues() {
 }
 
 async function getPhoenixValues() {
-  const gmxRewardTracker = await contractAt("RewardTracker", "0x2bD10f8E93B3669b6d42E74eEedC65dd1B0a1342")
-  const glpRewardTracker = await contractAt("RewardTracker", "0x9e295B5B976a184B14aD8cd72413aD846C299660")
+  const gmxRewardTracker = await contractAt("RewardTracker", "0x3c9586567a429BA0467Bc63FD38ea71bB6B912E0")
+  const glpRewardTracker = await contractAt("RewardTracker", "0xf183ed203015B489B568d2BB5D3d9fDB9db8c442")
   const tokenDecimals = 18
   const monthlyEsGmxForGlp = monthlyEsGmxForGlpOnAvax
 
@@ -54,15 +54,15 @@ function toInt(value) {
 }
 
 async function main() {
-  const { arbStakedGmxAndEsGmx, avaxStakedGmxAndEsGmx } = await getStakedAmounts()
+  const { pegasusStakedGmxAndEsGmx, phoenixStakedGmxAndEsGmx } = await getStakedAmounts()
   const { tokenDecimals, gmxRewardTracker, glpRewardTracker, monthlyEsGmxForGlp } = await getValues()
 
   const stakedAmounts = {
     pegasus: {
-      total: arbStakedGmxAndEsGmx
+      total: pegasusStakedGmxAndEsGmx
     },
     phoenix: {
-      total: avaxStakedGmxAndEsGmx
+      total: phoenixStakedGmxAndEsGmx
     }
   }
 
@@ -72,7 +72,7 @@ async function main() {
     totalStaked = totalStaked.add(stakedAmounts[net].total)
   }
 
-  const totalEsGmxRewards = expandDecimals(12500, tokenDecimals)
+  const totalEsGmxRewards = expandDecimals(0, tokenDecimals)
   const secondsPerMonth = 28 * 24 * 60 * 60
 
   const gmxRewardDistributor = await contractAt("RewardDistributor", await gmxRewardTracker.distributor())
