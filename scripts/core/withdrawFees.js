@@ -5,7 +5,7 @@ const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 const tokens = require('./tokens')[network];
 
 // time check to avoid invalid fee withdrawals
-const time = 1678842487
+const time = Math.floor(Date.now() / 1000) // Current timestamp in seconds
 
 if (Date.now() / 1000 > time + 10 * 60) {
   throw new Error("invalid time")
@@ -91,6 +91,65 @@ async function withdrawFeesAvax() {
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
+async function withdrawFeesLightlink() {
+  const receiver = { address: "0x49B373D422BdA4C6BfCdd5eC1E48A9a26fdA2F8b" }
+  const vault = await contractAt("Vault", "0xa6b88069EDC7a0C2F062226743C8985FF72bB2Eb")
+  const gov = await contractAt("Timelock", "0x585693AedB4c18424ED7cCd13589c048BdE00785")
+
+  const usdt = { address: "0x6308fa9545126237158778e74AE1b6b89022C5c0" }
+  const usdc = { address: "0x18fB38404DADeE1727Be4b805c5b242B5413Fa40" }
+  const usdtsg = { address: "0x808d7c71ad2ba3FA531b068a2417C63106BC0949" }
+  const usdcsg = { address: "0xbCF8C1B03bBDDA88D579330BDF236B58F8bb2cFd" }
+  const ll = { address: "0xd9d7123552fA2bEdB2348bB562576D67f6E8e96E" }
+  const wbnb = { address: "0x81A1f39f7394c4849E4261Aa02AaC73865d13774" }
+  const weth = { address: "0x7EbeF2A4b1B09381Ec5B9dF8C5c6f2dBECA59c73" }
+  const wbtc = { address: "0x46A5e3Fa4a02B9Ae43D9dF9408C86eD643144A67" }
+
+  const tokenArr = [usdt, usdc, usdtsg, usdcsg, ll, wbnb, weth, wbtc]
+
+  for (let i = 0; i < tokenArr.length; i++) {
+    const token = await contractAt("Token", tokenArr[i].address)
+    const poolAmount = await vault.poolAmounts(token.address)
+    const feeReserve = await vault.feeReserves(token.address)
+    const balance = await token.balanceOf(vault.address)
+    const vaultAmount = poolAmount.add(feeReserve)
+
+    if (vaultAmount.gt(balance)) {
+      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
+    }
+  }
+
+  await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
+}
+
+async function withdrawFeesSonic() {
+  const receiver = { address: "0x49B373D422BdA4C6BfCdd5eC1E48A9a26fdA2F8b" }
+  const vault = await contractAt("Vault", "0x11944027D4eDC1C17db2D5E9020530dcEcEfb85b")
+  const gov = await contractAt("Timelock", "0x1Cd160Cfd7D6a9F2831c0FF1982C11d386872094")
+
+  const usdc = { address: "0x29219dd400f2bf60e5a23d13be72b486d4038894" }
+  const eurc = { address: "0xe715cbA7B5cCb33790ceBFF1436809d36cb17E57" }
+  const ws = { address: "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38" }
+  const weth = { address: "0x50c42deacd8fc9773493ed674b675be577f2634b" }
+  const anon = { address: "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c" }
+
+  const tokenArr = [usdc, eurc, ws, weth, anon]
+
+  for (let i = 0; i < tokenArr.length; i++) {
+    const token = await contractAt("Token", tokenArr[i].address)
+    const poolAmount = await vault.poolAmounts(token.address)
+    const feeReserve = await vault.feeReserves(token.address)
+    const balance = await token.balanceOf(vault.address)
+    const vaultAmount = poolAmount.add(feeReserve)
+
+    if (vaultAmount.gt(balance)) {
+      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
+    }
+  }
+
+  await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
+}
+
 async function main() {
   if (network === "bsc") {
     await withdrawFeesBsc()
@@ -99,6 +158,16 @@ async function main() {
 
   if (network === "avax") {
     await withdrawFeesAvax()
+    return
+  }
+
+  if (network === "phoenix") {
+    await withdrawFeesLightlink()
+    return
+  }
+
+  if (network === "sonic") {
+    await withdrawFeesSonic()
     return
   }
 
