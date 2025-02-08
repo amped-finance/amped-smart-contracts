@@ -92,7 +92,7 @@ async function withdrawFeesAvax() {
 }
 
 async function withdrawFeesLightlink() {
-  const receiver = { address: "0x49B373D422BdA4C6BfCdd5eC1E48A9a26fdA2F8b" }
+  const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
   const vault = await contractAt("Vault", "0xa6b88069EDC7a0C2F062226743C8985FF72bB2Eb")
   const gov = await contractAt("Timelock", "0x585693AedB4c18424ED7cCd13589c048BdE00785")
 
@@ -123,7 +123,7 @@ async function withdrawFeesLightlink() {
 }
 
 async function withdrawFeesSonic() {
-  const receiver = { address: "0x49B373D422BdA4C6BfCdd5eC1E48A9a26fdA2F8b" }
+  const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
   const vault = await contractAt("Vault", "0x11944027D4eDC1C17db2D5E9020530dcEcEfb85b")
   const gov = await contractAt("Timelock", "0x1Cd160Cfd7D6a9F2831c0FF1982C11d386872094")
 
@@ -134,6 +134,33 @@ async function withdrawFeesSonic() {
   const anon = { address: "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c" }
 
   const tokenArr = [usdc, eurc, ws, weth, anon]
+
+  for (let i = 0; i < tokenArr.length; i++) {
+    const token = await contractAt("Token", tokenArr[i].address)
+    const poolAmount = await vault.poolAmounts(token.address)
+    const feeReserve = await vault.feeReserves(token.address)
+    const balance = await token.balanceOf(vault.address)
+    const vaultAmount = poolAmount.add(feeReserve)
+
+    if (vaultAmount.gt(balance)) {
+      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
+    }
+  }
+
+  await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
+}
+
+async function withdrawFeesBerachain() {
+  const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
+  const vault = await contractAt("Vault", "0xc3727b7E7F3FF97A111c92d3eE05529dA7BD2f48")
+  const gov = await contractAt("Timelock", "0xfCE9Fb0Fd92d6A19b1ee1CcaEb9d0480617E726e")
+
+  const wbera = { address: "0x6969696969696969696969696969696969696969" }
+  const honey = { address: "0xfcbd14dc51f0a4d49d5e53c2e0950e0bc26d0dce" }
+  const weth = { address: "0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590" }
+  const usdc = { address: "0x549943e04f40284185054145c6e4e9568c1d3241" }
+  
+  const tokenArr = [usdc, wbera, honey, weth]
 
   for (let i = 0; i < tokenArr.length; i++) {
     const token = await contractAt("Token", tokenArr[i].address)
@@ -168,6 +195,11 @@ async function main() {
 
   if (network === "sonic") {
     await withdrawFeesSonic()
+    return
+  }
+
+  if (network === "berachain") {
+    await withdrawFeesBerachain()
     return
   }
 

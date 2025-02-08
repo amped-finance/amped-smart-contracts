@@ -33,7 +33,10 @@ const {
   BSC_RPC,
   SONIC_RPC,
   SONIC_DEPLOY_KEY,
-  SONIC_API_KEY
+  SONIC_API_KEY,
+  BERACHAIN_RPC,
+  BERACHAIN_DEPLOY_KEY,
+  BERACHAIN_API_KEY
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -96,6 +99,11 @@ module.exports = {
       url: SONIC_RPC,
       chainId: 146,
       accounts: [SONIC_DEPLOY_KEY]
+    },
+    berachain: {
+      url: BERACHAIN_RPC,
+      chainId: 80094,
+      accounts: [BERACHAIN_DEPLOY_KEY]
     }
   },
   etherscan: {
@@ -103,7 +111,8 @@ module.exports = {
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
       bsc: BSCSCAN_API_KEY,
-      sonic: SONIC_API_KEY
+      sonic: SONIC_API_KEY,
+      berachain: BERACHAIN_API_KEY
     },
     customChains: [
       {
@@ -136,6 +145,14 @@ module.exports = {
         urls: {
           apiURL: "https://api.sonicscan.org/api",
           browserURL: "https://sonicscan.org"
+        }
+      },
+      {
+        network: "berachain",
+        chainId: 80094,
+        urls: {
+          apiURL: "https://api.berascan.com/api",
+          browserURL: "https://berascan.com"
         }
       }
     ]

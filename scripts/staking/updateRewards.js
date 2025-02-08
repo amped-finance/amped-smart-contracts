@@ -35,7 +35,7 @@ async function getPhoenixValues(signer) {
     {
       name: "feeGlpTracker",
       address: "0xEE5BD4c29f4cAC23554cc3965D7aE0E22FE84BD7",
-      transferAmount: "0.134"
+      transferAmount: "0.288"
     }
   ]
 
@@ -75,7 +75,7 @@ async function getSonicValues(signer) {
     {
       name: "feeGlpTracker",
       address: "0x21efb5680d6127d6c39ae0d62d80cb9fc8935887",
-      transferAmount: "170"
+      transferAmount: "4617"
     }
   ]
 
