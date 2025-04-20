@@ -20,6 +20,9 @@ async function deployGlpRewardRouter() {
 
   const rewardRouter = await contractAt("RewardRouterV2", getDeployFilteredInfo("GLPRewardRouterV2").imple)
 
+  // Fetch signer explicitly for sendTxn calls
+  const signer = await getFrameSigner();
+
   await sendTxn(rewardRouter.initialize(
     nativeToken, // _weth
     gmx, // _gmx
@@ -34,31 +37,31 @@ async function deployGlpRewardRouter() {
     glpManager, // _glpManager
     gmxVester, // _gmxVester
     glpVester // glpVester
-  ), "rewardRouter.initialize")
+  ), "rewardRouter.initialize", signer)
 
   const glpManagerContract = await contractAt("GlpManager", glpManager)
 
-  await sendTxn(glpManagerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "glpManager.setHandler(glpRewardRouter,true)")
+  await sendTxn(glpManagerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "glpManager.setHandler(glpRewardRouter,true)", signer)
 
   const stakedGMXTrackerContract = await contractAt("RewardTracker", stakedGMXTracker)
 
-  await sendTxn(stakedGMXTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "stakedGMXTracker.setHandler(glpRewardRouter,true)")
+  await sendTxn(stakedGMXTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "stakedGMXTracker.setHandler(glpRewardRouter,true)", signer)
 
   const stakedBonusGMXTrackerContract = await contractAt("RewardTracker", stakedBonusGMXTracker)
 
-  await sendTxn(stakedBonusGMXTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "stakedBonusGMXTracker.setHandler(glpRewardRouter,true)")
+  await sendTxn(stakedBonusGMXTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "stakedBonusGMXTracker.setHandler(glpRewardRouter,true)", signer)
 
   const feeGmxTrackerContract = await contractAt("RewardTracker", feeGmxTracker)
 
-  await sendTxn(feeGmxTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "feeGmxTracker.setHandler(glpRewardRouter,true)")
+  await sendTxn(feeGmxTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "feeGmxTracker.setHandler(glpRewardRouter,true)", signer)
 
   const feeGlpTrackerContract = await contractAt("RewardTracker", feeGlpTracker)
 
-  await sendTxn(feeGlpTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "feeGlpTracker.setHandler(glpRewardRouter,true)")
+  await sendTxn(feeGlpTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "feeGlpTracker.setHandler(glpRewardRouter,true)", signer)
 
   const stakedGlpTrackerContract = await contractAt("RewardTracker", stakedGlpTracker)
   
-  await sendTxn(stakedGlpTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "stakedGlpTracker.setHandler(glpRewardRouter,true)")
+  await sendTxn(stakedGlpTrackerContract.setHandler(getDeployFilteredInfo("GLPRewardRouterV2").imple, true), "stakedGlpTracker.setHandler(glpRewardRouter,true)", signer)
 }
 
 module.exports = deployGlpRewardRouter

@@ -9,7 +9,7 @@ const { getDeployFilteredInfo } = require("../shared/syncParams");
 
 async function deployShortsTrackerTimelock() {
   const signer = await getFrameSigner()
-  const admin = signer.address
+  const admin = await signer.getAddress()
   const handlers = [
     getDeployFilteredInfo("MultiSigner1").imple,
   ]
@@ -26,7 +26,8 @@ async function deployShortsTrackerTimelock() {
   for (const handler of handlers) {
     await sendTxn(
       shortsTrackerTimelock.setContractHandler(handler, true),
-      `shortsTrackerTimelock.setContractHandler ${handler}`
+      `shortsTrackerTimelock.setContractHandler ${handler}`,
+      signer
     )
   }
 }

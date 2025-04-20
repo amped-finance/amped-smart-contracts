@@ -36,18 +36,51 @@ function sleep(ms) {
 }
 
 async function getFrameSigner() {
-  try {
+  if (process.env.USE_FRAME_SIGNER !== 'true') {
+    console.log("[getFrameSigner] USE_FRAME_SIGNER not true, returning default signer.");
+    // Fallback to default Hardhat signer if Frame is not explicitly requested
     const accounts = await ethers.getSigners();
-    const signer = accounts[0]
+    if (!accounts || accounts.length === 0) {
+      throw new Error("No default Hardhat signers found.");
+    }
+    return accounts[0];
+  }
+
+  console.log("[getFrameSigner] Attempting to connect to Frame signer...");
+  try {
+    // Use the specific Frame provider URL
+    const frameProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:1248");
+    
+    // Check connection by requesting accounts
+    const frameAccounts = await frameProvider.listAccounts();
+    if (frameAccounts.length === 0) {
+      throw new Error("Frame is running but no account is connected/selected.");
+    }
+    
+    // Get the signer from the Frame provider
+    const signer = frameProvider.getSigner();
+    const signerAddress = await signer.getAddress();
+    console.log(`[getFrameSigner] Successfully connected to Frame signer: ${signerAddress}`);
     return signer;
-  } catch (e) {
-    throw new Error(`getFrameSigner error: ${e.toString()}`);
+
+  } catch (error) {
+    console.error("[getFrameSigner] Failed to connect to Frame signer. Ensure Frame is running, unlocked, and accessible at http://127.0.0.1:1248");
+    console.error(error.message);
+    // Decide how to handle error: rethrow, or fallback to default signer?
+    // Rethrowing to make the failure explicit:
+    throw new Error(`getFrameSigner failed: ${error.message}`); 
+    // // Or fallback (use with caution):
+    // console.warn("[getFrameSigner] Falling back to default Hardhat signer.");
+    // const accounts = await ethers.getSigners();
+    // if (!accounts || accounts.length === 0) throw new Error("Fallback failed: No default signers.");
+    // return accounts[0];
   }
 }
 
-async function sendTxn(txnPromise, label) {
+async function sendTxn(txnPromise, label, signer) {
+  const connection = signer || (await getFrameSigner());
   const txn = await txnPromise;
-  console.info(`Sending ${label}...`);
+  console.info(`Sending ${label} from ${await connection.getAddress()}...`);
   const ret = await txn.wait();
   addGasUsed(ret.cumulativeGasUsed.toString())
   console.info(`... Sent! ${txn.hash}`);
@@ -72,7 +105,7 @@ async function callWithRetries(func, args, retriesCount = 3) {
   }
 }
 
-async function deployContract(name, args, label, options, registerName) {
+async function deployContract(name, args, label, options, registerName, signer) {
   if (!options && typeof label === "object") {
     label = null;
     options = label;
@@ -82,7 +115,14 @@ async function deployContract(name, args, label, options, registerName) {
   if (label) {
     info = name + ":" + label;
   }
-  const contractFactory = await ethers.getContractFactory(name, options);
+
+  if (signer && !options) {
+    options = {};
+  }
+
+  const factoryOptions = signer ? { ...options, signer: signer } : options;
+
+  const contractFactory = await ethers.getContractFactory(name, factoryOptions);
   let contract;
   contract = await contractFactory.deploy(...args);
 
@@ -111,10 +151,10 @@ const verifyContract = async (name, address, contractPath, args) => {
   })
 }
 
-async function contractAt(name, address, provider, options) {
+async function contractAt(name, address, signerOrProvider, options) {
   let contractFactory = await ethers.getContractFactory(name, options);
-  if (provider) {
-    contractFactory = contractFactory.connect(provider);
+  if (signerOrProvider && (ethers.Signer.isSigner(signerOrProvider) || ethers.providers.Provider.isProvider(signerOrProvider))) {
+    contractFactory = contractFactory.connect(signerOrProvider);
   }
   return await contractFactory.attach(address);
 }
@@ -156,19 +196,21 @@ async function processBatch(batchLists, batchSize, handler) {
   }
 }
 
-async function updateTokensPerInterval(distributor, tokensPerInterval, label) {
+async function updateTokensPerInterval(distributor, tokensPerInterval, label, signer) {
   const prevTokensPerInterval = await distributor.tokensPerInterval();
   if (prevTokensPerInterval.eq(0)) {
     // if the tokens per interval was zero, the distributor.lastDistributionTime may not have been updated for a while
     // so the lastDistributionTime should be manually updated here
     await sendTxn(
       distributor.updateLastDistributionTime({ gasLimit: 1000000 }),
-      `${label}.updateLastDistributionTime`
+      `${label}.updateLastDistributionTime`,
+      signer
     );
   }
   await sendTxn(
     distributor.setTokensPerInterval(tokensPerInterval, { gasLimit: 1000000 }),
-    `${label}.setTokensPerInterval`
+    `${label}.setTokensPerInterval`,
+    signer
   );
 }
 

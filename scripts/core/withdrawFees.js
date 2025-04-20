@@ -1,8 +1,45 @@
 const { contractAt, sendTxn } = require("../shared/helpers")
 const { expandDecimals } = require("../../test/shared/utilities")
+const hre = require("hardhat");
+const { ethers } = hre;
+const { JsonRpcProvider } = ethers.providers;
 
 const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 const tokens = require('./tokens')[network];
+
+// Helper to obtain signer (Frame or default)
+async function getDeployerSigner() {
+  if (process.env.USE_FRAME_SIGNER === 'true') {
+    const targetChainId = hre.network.config?.chainId ?? (await ethers.provider.getNetwork()).chainId;
+    // Flexible provider to avoid mismatch errors
+    const frameProvider = new JsonRpcProvider("http://127.0.0.1:1248", "any");
+
+    // Attempt auto‑switch if necessary
+    const currentNet = await frameProvider.getNetwork();
+    if (currentNet.chainId !== targetChainId) {
+      const hexId = "0x" + targetChainId.toString(16);
+      try {
+        await frameProvider.send("wallet_switchEthereumChain", [{ chainId: hexId }]);
+      } catch (_) {/* ignore */}
+      const newNet = await frameProvider.getNetwork();
+      if (newNet.chainId !== targetChainId) {
+        throw new Error(`Frame network mismatch (have ${newNet.chainId}, need ${targetChainId}). Please switch manually.`);
+      }
+    }
+    return frameProvider.getSigner();
+  }
+
+  const [defaultSigner] = await ethers.getSigners();
+  return defaultSigner;
+}
+
+// Convenience wrappers that inject signer
+function withSigner(signer) {
+  return {
+    contractAt: (name, address, options) => contractAt(name, address, signer, options),
+    sendTxn: (txPromise, label) => sendTxn(txPromise, label, signer)
+  };
+}
 
 // time check to avoid invalid fee withdrawals
 const time = Math.floor(Date.now() / 1000) // Current timestamp in seconds
@@ -11,7 +48,8 @@ if (Date.now() / 1000 > time + 10 * 60) {
   throw new Error("invalid time")
 }
 
-async function withdrawFeesBsc() {
+async function withdrawFeesBsc(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
   const receiver = { address: "0x9f169c2189A2d975C18965DE985936361b4a9De9" }
   const vault = await contractAt("Vault", "0xc73A8DcAc88498FD4b4B1b2AaA37b0a2614Ff67B")
   const gov = await contractAt("Timelock", "0x58d6e1675232496226d074502d0c2df383fa0cbe")
@@ -41,11 +79,12 @@ async function withdrawFeesBsc() {
       await sendTxn(balanceUpdater.updateBalance(vault.address, token.address, usdg.address, expandDecimals(1, 18)), `updateBalance ${i}`)
     }
 
-    await sendTxn(gov.withdrawFees(vault.address, token.address, receiver.address), `gov.withdrawFees ${i}`)
+    await sendTxn(gov.withdrawFees(vault.address, token.address, receiver.address, { gasLimit: 500000 }), `gov.withdrawFees ${i}`)
   }
 }
 
-async function withdrawFeesArb() {
+async function withdrawFeesArb(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
   const receiver = { address: "0x49B373D422BdA4C6BfCdd5eC1E48A9a26fdA2F8b" }
   const vault = await contractAt("Vault", "0x489ee077994B6658eAfA855C308275EAd8097C4A")
   const gov = await contractAt("Timelock", await vault.gov())
@@ -68,7 +107,8 @@ async function withdrawFeesArb() {
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
-async function withdrawFeesAvax() {
+async function withdrawFeesAvax(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
   const receiver = { address: "0x49B373D422BdA4C6BfCdd5eC1E48A9a26fdA2F8b" }
   const vault = await contractAt("Vault", "0x9ab2De34A33fB459b538c43f251eB825645e8595")
   const gov = await contractAt("Timelock", await vault.gov())
@@ -91,7 +131,8 @@ async function withdrawFeesAvax() {
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
-async function withdrawFeesLightlink() {
+async function withdrawFeesLightlink(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
   const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
   const vault = await contractAt("Vault", "0xa6b88069EDC7a0C2F062226743C8985FF72bB2Eb")
   const gov = await contractAt("Timelock", "0x585693AedB4c18424ED7cCd13589c048BdE00785")
@@ -122,18 +163,20 @@ async function withdrawFeesLightlink() {
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
-async function withdrawFeesSonic() {
-  const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
-  const vault = await contractAt("Vault", "0x11944027D4eDC1C17db2D5E9020530dcEcEfb85b")
-  const gov = await contractAt("Timelock", "0x1Cd160Cfd7D6a9F2831c0FF1982C11d386872094")
+async function withdrawFeesSonic(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
+  const receiver = { address: "0xd99C871c8130B03C8BB597A74fb5EAA7a46864Bb" }
+  const vault = await contractAt("Vault", "0x5B8caae7cC6Ea61fb96Fd251C4Bc13e48749C7Da")
+  const gov = await contractAt("Timelock", "0xE97055C9087458434bf95dedA69531408cC210b5")
 
   const usdc = { address: "0x29219dd400f2bf60e5a23d13be72b486d4038894" }
-  const eurc = { address: "0xe715cbA7B5cCb33790ceBFF1436809d36cb17E57" }
   const ws = { address: "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38" }
   const weth = { address: "0x50c42deacd8fc9773493ed674b675be577f2634b" }
   const anon = { address: "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c" }
+  const sts = { address: "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955" }
+  const scusd = { address: "0xd3DCe716f3eF535C5Ff8d041c1A41C3bd89b97aE" }
 
-  const tokenArr = [usdc, eurc, ws, weth, anon]
+  const tokenArr = [usdc, ws, weth, anon, sts, scusd]
 
   for (let i = 0; i < tokenArr.length; i++) {
     const token = await contractAt("Token", tokenArr[i].address)
@@ -150,7 +193,8 @@ async function withdrawFeesSonic() {
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
-async function withdrawFeesBerachain() {
+async function withdrawFeesBerachain(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
   const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
   const vault = await contractAt("Vault", "0xc3727b7E7F3FF97A111c92d3eE05529dA7BD2f48")
   const gov = await contractAt("Timelock", "0xfCE9Fb0Fd92d6A19b1ee1CcaEb9d0480617E726e")
@@ -178,32 +222,34 @@ async function withdrawFeesBerachain() {
 }
 
 async function main() {
+  const signer = await getDeployerSigner();
+
   if (network === "bsc") {
-    await withdrawFeesBsc()
+    await withdrawFeesBsc(signer)
     return
   }
 
   if (network === "avax") {
-    await withdrawFeesAvax()
+    await withdrawFeesAvax(signer)
     return
   }
 
   if (network === "phoenix") {
-    await withdrawFeesLightlink()
+    await withdrawFeesLightlink(signer)
     return
   }
 
   if (network === "sonic") {
-    await withdrawFeesSonic()
+    await withdrawFeesSonic(signer)
     return
   }
 
   if (network === "berachain") {
-    await withdrawFeesBerachain()
+    await withdrawFeesBerachain(signer)
     return
   }
 
-  await withdrawFeesArb()
+  await withdrawFeesArb(signer)
 }
 
 main()

@@ -20,8 +20,9 @@ const deployPriceFeed = require("../core/deployPriceFeed");
 const deployPriceFeedExt = require("../core/deployPriceFeedExt");
 const deployMulticall = require("../core/deployMulticall"); 
 const { getGasUsed, syncDeployInfo } = require("../shared/syncParams");
+const directPoolDeposit = require("../core/directPoolDeposit");
 
-const deploy_localhost = async () => {
+const deploy_localhost = async (signer) => {
   // syncDeployInfo("USDT", {
   //   name: "USDT",
   //   imple: "0x81bCEa03678D1CEF4830942227720D542Aa15817",
@@ -53,25 +54,27 @@ const deploy_localhost = async () => {
   await deployMulticall()
   await deployPriceFeedExt()
 
-  await deployWETH()
-  await deployGMX()
-  await deployVault()
-  await deployVaultReader()
-  await deployReader()
-  await deployRewardReader()
-  await deployTokens()
-  await deployRewardRouterV2()
-  await deployOrderBook()
-  await deployOrderBookReader()
-  await deployReferralStorage()
-  await deployReferralReader()
-  await deployTokenManager()
-  await deployPriceFeedTimelock()
-  await deployTimelock()
-  await deployShortsTrackerTimelock()
-  await deployPositionRouter()
-  await deployPositionManager()
-  await deployPriceFeed()
+  await deployWETH(signer)
+  await deployGMX(signer)
+  await deployVault(signer)
+  await deployVaultReader(signer)
+  await deployReader(signer)
+  await deployRewardReader(signer)
+  await deployTokens(signer)
+  await deployRewardRouterV2(signer)
+  await deployOrderBook(signer)
+  await deployOrderBookReader(signer)
+  await deployReferralStorage(signer)
+  await deployReferralReader(signer)
+  await deployTokenManager(signer)
+  await deployPriceFeedTimelock(signer)
+  await deployTimelock(signer)
+  await deployShortsTrackerTimelock(signer)
+  await deployPositionRouter(signer)
+  await deployPositionManager(signer)
+  await deployPriceFeed(signer)
+
+  // await directPoolDeposit('1000000000000000000') // 1 WETH
 
   console.log('gas used:', getGasUsed())
 };

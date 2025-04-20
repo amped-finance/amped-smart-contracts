@@ -36,7 +36,13 @@ const {
   SONIC_API_KEY,
   BERACHAIN_RPC,
   BERACHAIN_DEPLOY_KEY,
-  BERACHAIN_API_KEY
+  BERACHAIN_API_KEY,
+  MEGAETH_TESTNET_RPC,
+  MEGAETH_TESTNET_DEPLOY_KEY,
+  MEGAETH_TESTNET_API_KEY,
+  SUPERSEED_RPC,
+  SUPERSEED_DEPLOY_KEY,
+  SUPERSEED_API_KEY,
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -104,6 +110,19 @@ module.exports = {
       url: BERACHAIN_RPC,
       chainId: 80094,
       accounts: [BERACHAIN_DEPLOY_KEY]
+    },
+    megaeth: {
+      url: MEGAETH_TESTNET_RPC,
+      chainId: 6342,
+      accounts: [MEGAETH_TESTNET_DEPLOY_KEY]
+    },
+    superseed: {
+      url: SUPERSEED_RPC,
+      chainId: 5330,
+      accounts: [SUPERSEED_DEPLOY_KEY],
+      // EIP‑1559 style fee params (adjust as network demands):
+      maxPriorityFeePerGas: 1100000, // 0.0011 gwei tip
+      maxFeePerGas: 1000000000000 // 1000 gwei cap (higher than typical base to ensure inclusion)
     }
   },
   etherscan: {
@@ -112,7 +131,9 @@ module.exports = {
       phoenix: PHOENIX_API_KEY,
       bsc: BSCSCAN_API_KEY,
       sonic: SONIC_API_KEY,
-      berachain: BERACHAIN_API_KEY
+      berachain: BERACHAIN_API_KEY,
+      megaeth: MEGAETH_TESTNET_API_KEY,
+      superseed: SUPERSEED_API_KEY
     },
     customChains: [
       {
@@ -153,6 +174,22 @@ module.exports = {
         urls: {
           apiURL: "https://api.berascan.com/api",
           browserURL: "https://berascan.com"
+        }
+      },
+      {
+        network: "megaeth",
+        chainId: 6342,
+        urls: {
+          apiURL: "https://testnet.megaeth.network/api", // Assuming this is the API URL, adjust if needed
+          browserURL: "https://testnet.megaeth.network", // Assuming this is the browser URL, adjust if needed
+        }
+      },
+      {
+        network: "superseed",
+        chainId: 5330,
+        urls: {
+          apiURL: "https://explorer.superseed.xyz/api",
+          browserURL: "https://explorer.superseed.xyz"
         }
       }
     ]

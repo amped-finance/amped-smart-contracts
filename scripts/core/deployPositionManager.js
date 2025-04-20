@@ -1,5 +1,6 @@
 const { deployContract, contractAt, sendTxn } = require("../shared/helpers");
 const { getDeployFilteredInfo } = require("../shared/syncParams");
+const { getFrameSigner } = require("../shared/helpers");
 
 const depositFee = 30; // 0.3%
 
@@ -13,6 +14,9 @@ async function deployPositionManager() {
   const { imple: referralStorageAddr } =
     getDeployFilteredInfo("ReferralStorage");
   const { imple: positionUtilsAddr } = getDeployFilteredInfo("PositionUtils");
+
+  // Fetch signer explicitly for sendTxn calls
+  const signer = await getFrameSigner();
 
   const orderKeepers = [
     { address: getDeployFilteredInfo("MultiSigner1").imple },
@@ -57,14 +61,14 @@ async function deployPositionManager() {
   ) {
     await sendTxn(
       positionManager.setReferralStorage(referralStorageAddr),
-      "positionManager.setReferralStorage"
+      "positionManager.setReferralStorage", signer
     );
   }
 
   if (await positionManager.shouldValidateIncreaseOrder()) {
     await sendTxn(
       positionManager.setShouldValidateIncreaseOrder(false),
-      "positionManager.setShouldValidateIncreaseOrder(false)"
+      "positionManager.setShouldValidateIncreaseOrder(false)", signer
     );
   }
 
@@ -73,7 +77,7 @@ async function deployPositionManager() {
     if (!(await positionManager.isOrderKeeper(orderKeeper.address))) {
       await sendTxn(
         positionManager.setOrderKeeper(orderKeeper.address, true),
-        "positionManager.setOrderKeeper(orderKeeper)"
+        "positionManager.setOrderKeeper(orderKeeper)", signer
       );
     }
   }
@@ -83,7 +87,7 @@ async function deployPositionManager() {
     if (!(await positionManager.isLiquidator(liquidator.address))) {
       await sendTxn(
         positionManager.setLiquidator(liquidator.address, true),
-        "positionManager.setLiquidator(liquidator)"
+        "positionManager.setLiquidator(liquidator)", signer
       );
     }
   }
@@ -93,7 +97,7 @@ async function deployPositionManager() {
   if (!(await timelock.isHandler(positionManager.address))) {
     await sendTxn(
       timelock.setContractHandler(positionManager.address, true),
-      "timelock.setContractHandler(positionManager)"
+      "timelock.setContractHandler(positionManager)", signer
     );
   }
 
@@ -102,7 +106,7 @@ async function deployPositionManager() {
   if (!(await vault.isLiquidator(positionManager.address))) {
     await sendTxn(
       timelock.setLiquidator(vault.address, positionManager.address, true),
-      "timelock.setLiquidator(vault, positionManager, true)"
+      "timelock.setLiquidator(vault, positionManager, true)", signer
     );
   }
   
@@ -111,7 +115,7 @@ async function deployPositionManager() {
   if (!(await shortsTracker.isHandler(positionManager.address))) {
     await sendTxn(
       shortsTracker.setHandler(positionManager.address, true),
-      "shortsTracker.setContractHandler(positionManager.address, true)"
+      "shortsTracker.setContractHandler(positionManager.address, true)", signer
     );
   }
 
@@ -120,7 +124,7 @@ async function deployPositionManager() {
   if (!(await router.plugins(positionManager.address))) {
     await sendTxn(
       router.addPlugin(positionManager.address),
-      "router.addPlugin(positionManager)"
+      "router.addPlugin(positionManager)", signer
     );
   }
 
@@ -129,7 +133,7 @@ async function deployPositionManager() {
     if (!(await positionManager.isPartner(partnerContract))) {
       await sendTxn(
         positionManager.setPartner(partnerContract, true),
-        "positionManager.setPartner(partnerContract)"
+        "positionManager.setPartner(partnerContract)", signer
       );
     }
   }
@@ -137,7 +141,7 @@ async function deployPositionManager() {
   if ((await positionManager.gov()) != (await vault.gov())) {
     await sendTxn(
       positionManager.setGov(await vault.gov()),
-      "positionManager.setGov"
+      "positionManager.setGov", signer
     );
   }
 

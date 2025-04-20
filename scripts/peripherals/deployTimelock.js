@@ -4,7 +4,7 @@ const { getDeployFilteredInfo } = require("../shared/syncParams");
 
 async function deployTimelock() {
   const signer = await getFrameSigner()
-  const admin = signer.address
+  const admin = await signer.getAddress()
   const buffer = 24 * 60 * 60
   const maxTokenSupply = expandDecimals("13250000", 18)
 
@@ -66,7 +66,7 @@ async function deployTimelock() {
   await sendTxn(timelock.signalApprove(gmx, admin, "1000000000000000000"), "timelock.signalApprove")
 
   const referralStorage = await contractAt("ReferralStorage", getDeployFilteredInfo("ReferralStorage").imple)
-  await sendTxn(referralStorage.setGov(timelock.address), `referralStorage.setGov(${timelock.address})`)
+  await sendTxn(referralStorage.setGov(timelock.address), `referralStorage.setGov(${timelock.address})`, signer)
 }
 
 module.exports = deployTimelock

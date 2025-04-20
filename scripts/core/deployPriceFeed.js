@@ -10,7 +10,7 @@ const tokenList = require('./tokens')
 
 async function deployPriceFeed() {
   const signer = await getFrameSigner();
-  const tokenManagerAddr = signer.address;
+  const tokenManagerAddr = await signer.getAddress();
 
   const network = getNetwork();
   const tokens = tokenList[network]
@@ -94,29 +94,29 @@ async function deployPriceFeed() {
 
   await sendTxn(
     vaultPriceFeed.setMaxStrictPriceDeviation(expandDecimals(1, 28)),
-    "vaultPriceFeed.setMaxStrictPriceDeviation"
+    "vaultPriceFeed.setMaxStrictPriceDeviation", signer
   ) // 0.01 USD
 
   await sendTxn(
     vaultPriceFeed.setPriceSampleSpace(1),
-    "vaultPriceFeed.setPriceSampleSpace"
+    "vaultPriceFeed.setPriceSampleSpace", signer
   )
 
   await sendTxn(
     vaultPriceFeed.setSecondaryPriceFeed(secondaryPriceFeed.address),
-    "vaultPriceFeed.setSecondaryPriceFeed"
+    "vaultPriceFeed.setSecondaryPriceFeed", signer
   )
 
   await sendTxn(
     vaultPriceFeed.setIsAmmEnabled(false),
-    "vaultPriceFeed.setIsAmmEnabled"
+    "vaultPriceFeed.setIsAmmEnabled", signer
   )
 
 
   if (chainlinkFlags) {
     await sendTxn(
       vaultPriceFeed.setChainlinkFlags(chainlinkFlags.address),
-      "vaultPriceFeed.setChainlinkFlags"
+      "vaultPriceFeed.setChainlinkFlags", signer
     );
   }
 
@@ -129,7 +129,7 @@ async function deployPriceFeed() {
         tokenItem.address, // _token
         tokenItem.spreadBasisPoints // _spreadBasisPoints
       ),
-      `vaultPriceFeed.setSpreadBasisPoints(${tokenItem.name}) ${tokenItem.spreadBasisPoints}`
+      `vaultPriceFeed.setSpreadBasisPoints(${tokenItem.name}) ${tokenItem.spreadBasisPoints}`, signer
     )
   }
 
@@ -143,13 +143,13 @@ async function deployPriceFeed() {
         token.priceDecimals, // _priceDecimals
         token.stable // _isStrictStable
       ),
-      `vaultPriceFeed.setTokenConfig(${token.name}) ${token.address} ${token.priceFeed}`
+      `vaultPriceFeed.setTokenConfig(${token.name}) ${token.address} ${token.priceFeed}`, signer
     );
   }
 
   await sendTxn(
     secondaryPriceFeed.initialize(1, signers, updaters),
-    "secondaryPriceFeed.initialize"
+    "secondaryPriceFeed.initialize", signer
   )
 
   await sendTxn(
@@ -157,27 +157,27 @@ async function deployPriceFeed() {
       fastPriceTokens.filter(t => t !== undefined).map((t) => t.address),
       fastPriceTokens.filter(t => t !== undefined).map((t) => t.fastPricePrecision)
     ),
-    "secondaryPriceFeed.setTokens"
+    "secondaryPriceFeed.setTokens", signer
   )
 
   await sendTxn(
     secondaryPriceFeed.setVaultPriceFeed(vaultPriceFeed.address),
-    "secondaryPriceFeed.setVaultPriceFeed"
+    "secondaryPriceFeed.setVaultPriceFeed", signer
   )
 
   await sendTxn(
     secondaryPriceFeed.setMaxTimeDeviation(60 * 60),
-    "secondaryPriceFeed.setMaxTimeDeviation"
+    "secondaryPriceFeed.setMaxTimeDeviation", signer
   )
 
   await sendTxn(
     secondaryPriceFeed.setSpreadBasisPointsIfInactive(20), // +- 0.2%: min, max price inactive
-    "secondaryPriceFeed.setSpreadBasisPointsIfInactive"
+    "secondaryPriceFeed.setSpreadBasisPointsIfInactive", signer
   )
 
   await sendTxn(
     secondaryPriceFeed.setSpreadBasisPointsIfChainError(50), // +-0.5%: min, max price for chain error.
-    "secondaryPriceFeed.setSpreadBasisPointsIfChainError"
+    "secondaryPriceFeed.setSpreadBasisPointsIfChainError", signer
   )
 
   await sendTxn(
@@ -185,42 +185,42 @@ async function deployPriceFeed() {
       fastPriceTokens.filter(t => t !== undefined).map((t) => t.address),
       fastPriceTokens.filter(t => t !== undefined).map((t) => t.maxCumulativeDeltaDiff)
     ),
-    "secondaryPriceFeed.setMaxCumulativeDeltaDiffs"
+    "secondaryPriceFeed.setMaxCumulativeDeltaDiffs", signer
   )
 
   await sendTxn(
     secondaryPriceFeed.setPriceDataInterval(1 * 60),
-    "secondaryPriceFeed.setPriceDataInterval"
+    "secondaryPriceFeed.setPriceDataInterval", signer
   )
 
   await sendTxn(
     positionRouter1.setPositionKeeper(secondaryPriceFeed.address, true),
-    "positionRouter.setPositionKeeper(secondaryPriceFeed)"
+    "positionRouter.setPositionKeeper(secondaryPriceFeed)", signer
   )
 
   await sendTxn(
     positionRouter2.setPositionKeeper(secondaryPriceFeed.address, true),
-    "positionRouter.setPositionKeeper(secondaryPriceFeed)"
+    "positionRouter.setPositionKeeper(secondaryPriceFeed)", signer
   )
 
   await sendTxn(
     fastPriceEvents.setIsPriceFeed(secondaryPriceFeed.address, true),
-    "fastPriceEvents.setIsPriceFeed"
+    "fastPriceEvents.setIsPriceFeed", signer
   )
 
   await sendTxn(
     vaultPriceFeed.setGov(priceFeedTimelock),
-    "vaultPriceFeed.setGov"
+    "vaultPriceFeed.setGov", signer
   )
 
   await sendTxn(
     secondaryPriceFeed.setGov(priceFeedTimelock),
-    "secondaryPriceFeed.setGov"
+    "secondaryPriceFeed.setGov", signer
   )
   
   await sendTxn(
     secondaryPriceFeed.setTokenManager(tokenManager),
-    "secondaryPriceFeed.setTokenManager"
+    "secondaryPriceFeed.setTokenManager", signer
   );
 }
 

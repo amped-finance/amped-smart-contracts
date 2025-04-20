@@ -22,7 +22,7 @@ const deployMulticall = require("../core/deployMulticall");
 const directPoolDeposit = require("../core/directPoolDeposit");
 // const configureNewToken = require("../peripherals/configureNewToken");
 
-const deploy_pegasus = async () => {
+async function deploy_pegasus(signer) {
   syncDeployInfo("usdt", {
     name: "usdt",
     imple: "0x057e8e2bC40ECff87e6F9b28750D5E7AC004Eab9",
@@ -73,30 +73,30 @@ const deploy_pegasus = async () => {
   });
   await deployMulticall()
 
-  await deployGMX()
-  await deployVault()
-  await deployVaultReader()
-  await deployReader()
-  await deployRewardReader()
-  await deployTokens()
-  await deployRewardRouterV2()
-  await deployOrderBook()
-  await deployOrderBookReader()
-  await deployReferralStorage()
-  await deployReferralReader()
-  await deployTokenManager()
-  await deployPriceFeedTimelock()
-  await deployTimelock()
-  await deployShortsTrackerTimelock()
-  await deployPositionRouter()
-  await deployPositionManager()
-  await deployPriceFeed()
-  await deployGlpRewardRouter()
+  await deployGMX(signer)
+  await deployVault(signer)
+  await deployVaultReader(signer)
+  await deployReader(signer)
+  await deployRewardReader(signer)
+  await deployTokens(signer)
+  await deployRewardRouterV2(signer)
+  await deployOrderBook(signer)
+  await deployOrderBookReader(signer)
+  await deployReferralStorage(signer)
+  await deployReferralReader(signer)
+  await deployTokenManager(signer)
+  await deployPriceFeedTimelock(signer)
+  await deployTimelock(signer)
+  await deployShortsTrackerTimelock(signer)
+  await deployPositionRouter(signer)
+  await deployPositionManager(signer)
+  await deployPriceFeed(signer)
+  await deployGlpRewardRouter(signer)
 
   console.log("gas used:", getGasUsed());
 
   // await directPoolDeposit('10000000000000000') // 1 WETH
   //  await configureNewToken()
-};
+}
 
 module.exports = { deploy_pegasus };

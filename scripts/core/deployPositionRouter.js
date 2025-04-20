@@ -5,6 +5,7 @@ const tokenList = require('./tokens')
 async function deployPositionRouter() {
   const signer = await getFrameSigner()
   const capKeeperWallet = signer
+  const capKeeperAddress = await signer.getAddress()
   const {imple: vaultAddr} = getDeployFilteredInfo("Vault")
   const {imple: timelockAddr} = getDeployFilteredInfo("Timelock")
   const {imple: routerAddr} = getDeployFilteredInfo("Router")
@@ -36,18 +37,18 @@ async function deployPositionRouter() {
     }
   })
 
-  await sendTxn(positionRouter.setReferralStorage(referralStorage.address), "positionRouter.setReferralStorage")
-  await sendTxn(referralStorageGov.signalSetHandler(referralStorage.address, positionRouter.address, true), "referralStorage.signalSetHandler(positionRouter)")
+  await sendTxn(positionRouter.setReferralStorage(referralStorage.address), "positionRouter.setReferralStorage", signer)
+  await sendTxn(referralStorageGov.signalSetHandler(referralStorage.address, positionRouter.address, true), "referralStorage.signalSetHandler(positionRouter)", signer)
 
   const shortsTrackerTimelock = await contractAt("ShortsTrackerTimelock", shortsTrackerTimelockAddr)
-  await sendTxn(shortsTrackerTimelock.signalSetHandler(referralStorage.address, positionRouter.address, true), "shortsTrackerTimelock.signalSetHandler(positionRouter)")
+  await sendTxn(shortsTrackerTimelock.signalSetHandler(referralStorage.address, positionRouter.address, true), "shortsTrackerTimelock.signalSetHandler(positionRouter)", signer)
 
   const router = await contractAt("Router", routerAddr)
-  await sendTxn(router.addPlugin(positionRouter.address), "router.addPlugin")
+  await sendTxn(router.addPlugin(positionRouter.address), "router.addPlugin", signer)
 
-  await sendTxn(positionRouter.setDelayValues(0, 180, 30 * 60), "positionRouter.setDelayValues")
+  await sendTxn(positionRouter.setDelayValues(0, 180, 30 * 60), "positionRouter.setDelayValues", signer)
   const timelock = await contractAt("Timelock", timelockAddr)
-  await sendTxn(timelock.setContractHandler(positionRouter.address, true), "timelock.setContractHandler(positionRouter)")
+  await sendTxn(timelock.setContractHandler(positionRouter.address, true), "timelock.setContractHandler(positionRouter)", signer)
 
   const vault = await contractAt("Vault", vaultAddr)
 
@@ -72,24 +73,24 @@ async function deployPositionRouter() {
         token.stable === true? true: false,
         token.stable === true? false: true
       ),
-      `vault.setTokenConfig(${token.name}) ${token.address} ${token.priceFeed}`
+      `vault.setTokenConfig(${token.name}) ${token.address} ${token.priceFeed}`, signer
     );
   }
 
   await sendTxn(
     vault.setGov(timelock.address),
-    "vault.setGov(timelock)"
+    "vault.setGov(timelock)", signer
   );
 
-  await sendTxn(positionRouter.setAdmin(capKeeperWallet.address), "positionRouter.setAdmin")
-  await sendTxn(positionRouter.setGov(await vault.gov()), "positionRouter.setGov")
+  await sendTxn(positionRouter.setAdmin(capKeeperAddress), "positionRouter.setAdmin", signer)
+  await sendTxn(positionRouter.setGov(await vault.gov()), "positionRouter.setGov", signer)
 
   const shortsTracker = await contractAt("ShortsTracker", shortsTrackerAddr)
 
   if (!(await shortsTracker.isHandler(positionRouter.address))) {
     await sendTxn(
       shortsTracker.setHandler(positionRouter.address, true),
-      "shortsTracker.setContractHandler(positionRouter.address, true)"
+      "shortsTracker.setContractHandler(positionRouter.address, true)", signer
     );
   }
 }

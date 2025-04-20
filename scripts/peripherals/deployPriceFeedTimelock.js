@@ -3,10 +3,12 @@ const { getDeployFilteredInfo } = require("../shared/syncParams");
 
 async function deployPriceFeedTimelock() {
   const signer = await getFrameSigner()
-  const admin = signer.address
+  const admin = await signer.getAddress()
   const buffer = 24 * 60 * 60
 
   const { imple: tokenManager } = getDeployFilteredInfo("TokenManager")
+
+  console.log(`[deployPriceFeedTimelock] Admin address to be used: ${admin}`);
 
   await deployContract("PriceFeedTimelock", [
     admin,

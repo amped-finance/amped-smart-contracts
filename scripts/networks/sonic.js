@@ -23,7 +23,7 @@ const deployMulticall = require("../core/deployMulticall");
 const directPoolDeposit = require("../core/directPoolDeposit");
 // const configureNewToken = require("../peripherals/configureNewToken");
 
-async function deploy_sonic() {
+async function deploy_sonic(signer) {
   syncDeployInfo("usdc", {
     name: "usdc",
     imple: "0x29219dd400f2bf60e5a23d13be72b486d4038894",
@@ -74,25 +74,25 @@ async function deploy_sonic() {
   });
   await deployMulticall()
 
-  // await deployGMX()
-  await deployVault()
-  await deployVaultReader()
-  await deployReader()
-  await deployRewardReader()
-  await deployTokens()
-  await deployRewardRouterV2()
-  await deployOrderBook()
-  await deployOrderBookReader()
-  await deployReferralStorage()
-  await deployReferralReader()
-  await deployTokenManager()
-  await deployPriceFeedTimelock()
-  await deployTimelock()
-  await deployShortsTrackerTimelock()
-  await deployPositionRouter()
-  await deployPositionManager()
-  await deployPriceFeed()
-  await deployGlpRewardRouter()
+  await deployGMX(signer)
+  await deployVault(signer)
+  await deployVaultReader(signer)
+  await deployReader(signer)
+  await deployRewardReader(signer)
+  await deployTokens(signer)
+  await deployRewardRouterV2(signer)
+  await deployOrderBook(signer)
+  await deployOrderBookReader(signer)
+  await deployReferralStorage(signer)
+  await deployReferralReader(signer)
+  await deployTokenManager(signer)
+  await deployPriceFeedTimelock(signer)
+  await deployTimelock(signer)
+  await deployShortsTrackerTimelock(signer)
+  await deployPositionRouter(signer)
+  await deployPositionManager(signer)
+  await deployPriceFeed(signer)
+  await deployGlpRewardRouter(signer)
 
   // await directPoolDeposit('1000000000000000000') // 1 WETH
   // await configureNewToken()
