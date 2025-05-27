@@ -38,7 +38,7 @@ Install packages:
 - **RewardRouter**: Handles staking and reward distribution
 - **RewardTracker**: Tracks staked balances and reward accrual
 - **YieldBearingALPVault (yALP)**: EIP-4626 vault for auto-compounding ALP rewards
-  - Deployed on Sonic: `0xd2e4b0cC3FB79ef958137206cbEd94C7a5C7972d`
+  - Deployed on Sonic: `0x1358cC494A3D2588BB70fDc173EedeE4C5aFBEF3`
   - See [docs/YieldBearingALPVault.md](docs/YieldBearingALPVault.md) for details
 
 ### Price Feeds

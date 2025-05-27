@@ -6,11 +6,11 @@ async function main() {
   console.log("Compounding yALP vault with signer:", signer.address);
   
   // Replace with your deployed vault address
-  const YALP_VAULT = process.env.YALP_VAULT_ADDRESS || "YOUR_VAULT_ADDRESS_HERE";
+  const YALP_VAULT = process.env.YALP_VAULT || process.env.YALP_VAULT_ADDRESS || "YOUR_VAULT_ADDRESS_HERE";
   
   if (YALP_VAULT === "YOUR_VAULT_ADDRESS_HERE") {
-    console.log("❌ Error: Please set YALP_VAULT_ADDRESS environment variable");
-    console.log("Example: YALP_VAULT_ADDRESS=0x... npx hardhat run scripts/staking/compoundYALP.js");
+    console.log("❌ Error: Please set YALP_VAULT or YALP_VAULT_ADDRESS environment variable");
+    console.log("Example: YALP_VAULT=0x... npx hardhat run scripts/staking/compoundYALP.js");
     return;
   }
   
@@ -27,7 +27,7 @@ async function main() {
   
   // Check if there's any WETH to compound
   const wethAddress = await vault.weth();
-  const weth = await contractAt("IERC20", wethAddress);
+  const weth = await ethers.getContractAt("IERC20", wethAddress);
   const wethBalance = await weth.balanceOf(vault.address);
   
   console.log("\nWETH balance in vault:", ethers.utils.formatEther(wethBalance));

@@ -11,91 +11,156 @@ import "../core/interfaces/IGlpManager.sol";
 
 /**
  * @title YieldBearingALPVault
- * @notice EIP-4626 compliant vault that holds fsALP on behalf of users
- * @dev Only accepts ETH/native token deposits
+ * @notice EIP-4626 compliant tokenized vault for Amped's ALP tokens
+ * @dev Wraps ALP tokens into yield-bearing yALP tokens that auto-compound rewards
+ * @author Amped Finance
  */
 contract YieldBearingALPVault is ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
+    // ========== STATE VARIABLES ==========
+    
+    IRewardRouterV2Extended public immutable rewardRouter;
+    IERC20 public immutable fsAlp; // fee + staked ALP
+    IGlpManager public immutable glpManager;
+    IWETH public immutable ws; // Wrapped Sonic
+    IERC20 public immutable esAmp;
+    
+    // ERC20 state
     string public constant name = "Yield Bearing ALP";
     string public constant symbol = "yALP";
     uint8 public constant decimals = 18;
-
-    IRewardRouterV2Extended public immutable rewardRouter;
-    IRewardTracker public immutable fsAlp;
-    IGlpManager public immutable glpManager;
-    IWETH public immutable weth;
-    IERC20 public immutable esAmp;
-    
-    address public keeper;
-    address public gov;
-    
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
-
+    
+    // Admin state
+    address public gov;
+    address public keeper;
+    
+    // Compound tracking
+    uint256 public totalCompoundedRewards;
+    
+    // Deposit tracking
+    uint256 public lastDeposit;
+    
     // Events
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Deposit(address indexed sender, address indexed owner, uint256 assets, uint256 shares);
-    event Withdraw(
-        address indexed sender,
-        address indexed receiver,
-        address indexed owner,
-        uint256 assets,
-        uint256 shares
-    );
-
-    modifier onlyGov() {
-        require(msg.sender == gov, "YieldBearingALP: forbidden");
-        _;
-    }
-
+    event Withdraw(address indexed sender, address indexed receiver, address indexed owner, uint256 assets, uint256 shares);
+    event Compound(uint256 wsAmount, uint256 alpGained);
+    
+    // ========== CONSTRUCTOR ==========
+    
     constructor(
         address _rewardRouter,
         address _fsAlp,
         address _glpManager,
-        address _weth,
+        address _ws,
         address _esAmp
     ) public {
         rewardRouter = IRewardRouterV2Extended(_rewardRouter);
-        fsAlp = IRewardTracker(_fsAlp);
+        fsAlp = IERC20(_fsAlp);
         glpManager = IGlpManager(_glpManager);
-        weth = IWETH(_weth);
+        ws = IWETH(_ws);
         esAmp = IERC20(_esAmp);
-        
         gov = msg.sender;
-        keeper = msg.sender;
+        keeper = msg.sender; // Initially set deployer as keeper
     }
-
-    // ========== DEPOSIT FUNCTION ==========
-
-    /**
-     * @notice Deposit ETH and receive yALP
-     * @param _minUsdg Minimum USDG to accept (slippage protection)
-     * @param _minGlp Minimum GLP to accept (slippage protection)
-     * @param _receiver Address to receive yALP tokens
-     * @return shares Amount of yALP minted
-     */
-    function depositETH(
-        uint256 _minUsdg,
-        uint256 _minGlp,
-        address _receiver
-    ) external payable nonReentrant returns (uint256 shares) {
-        require(msg.value > 0, "YieldBearingALP: zero value");
-        require(_receiver != address(0), "YieldBearingALP: zero receiver");
+    
+    // ========== MODIFIERS ==========
+    
+    modifier onlyGov() {
+        require(msg.sender == gov, "YieldBearingALP: forbidden");
+        _;
+    }
+    
+    modifier onlyKeeper() {
+        require(msg.sender == keeper, "YieldBearingALP: only keeper");
+        _;
+    }
+    
+    // ========== VIEW FUNCTIONS ==========
+    
+    function totalAssets() public view returns (uint256) {
+        return fsAlp.balanceOf(address(this));
+    }
+    
+    function convertToShares(uint256 assets) public view returns (uint256) {
+        uint256 supply = totalSupply;
+        return supply == 0 ? assets : assets.mul(supply).div(totalAssets());
+    }
+    
+    function convertToAssets(uint256 shares) public view returns (uint256) {
+        uint256 supply = totalSupply;
+        return supply == 0 ? shares : shares.mul(totalAssets()).div(supply);
+    }
+    
+    function previewDeposit(uint256 assets) public view returns (uint256) {
+        return convertToShares(assets);
+    }
+    
+    function previewMint(uint256 shares) public view returns (uint256) {
+        uint256 supply = totalSupply;
+        return supply == 0 ? shares : shares.mul(totalAssets()).add(supply.sub(1)).div(supply);
+    }
+    
+    function previewWithdraw(uint256 assets) public view returns (uint256) {
+        uint256 supply = totalSupply;
+        return supply == 0 ? assets : assets.mul(supply).add(totalAssets().sub(1)).div(totalAssets());
+    }
+    
+    function previewRedeem(uint256 shares) public view returns (uint256) {
+        return convertToAssets(shares);
+    }
+    
+    function maxDeposit(address) public pure returns (uint256) {
+        return uint256(-1);
+    }
+    
+    function maxMint(address) public pure returns (uint256) {
+        return uint256(-1);
+    }
+    
+    function maxWithdraw(address owner) public view returns (uint256) {
+        return convertToAssets(balanceOf[owner]);
+    }
+    
+    function maxRedeem(address owner) public view returns (uint256) {
+        return balanceOf[owner];
+    }
+    
+    function asset() public view returns (address) {
+        return address(fsAlp);
+    }
+    
+    // ========== AUM FUNCTION ==========
+    
+    function getAum(bool maximise) public view returns (uint256) {
+        return glpManager.getAumInUsdg(maximise);
+    }
+    
+    // ========== COOLDOWN FUNCTIONS ==========
+    
+    function withdrawalsAvailableAt() public view returns (uint256) {
+        if (lastDeposit == 0) return 0;
+        uint256 cooldown = glpManager.cooldownDuration();
+        return lastDeposit.add(cooldown);
+    }
+    
+    // ========== DEPOSIT FUNCTIONS ==========
+    
+    function depositS(uint256 minUsdg, uint256 minGlp) external payable nonReentrant returns (uint256 shares) {
+        require(msg.value > 0, "YieldBearingALP: zero amount");
         
-        // Get current fsALP balance
-        uint256 fsAlpBefore = totalAssets();
+        // Get the current fsALP balance before minting
+        uint256 fsAlpBefore = fsAlp.balanceOf(address(this));
         
-        // Mint and stake GLP with ETH - vault receives fsALP
-        rewardRouter.mintAndStakeGlpETH{value: msg.value}(_minUsdg, _minGlp);
-        
-        // Calculate how much fsALP we received
-        uint256 fsAlpAfter = totalAssets();
-        uint256 fsAlpReceived = fsAlpAfter.sub(fsAlpBefore);
-        require(fsAlpReceived > 0, "YieldBearingALP: no fsALP received");
+        // Mint and stake GLP through reward router
+        uint256 fsAlpReceived = rewardRouter.mintAndStakeGlpETH{value: msg.value}(minUsdg, minGlp);
+        require(fsAlpReceived > 0, "YieldBearingALP: mint failed");
         
         // Calculate shares to mint based on the state BEFORE the deposit
         if (totalSupply == 0) {
@@ -104,124 +169,89 @@ contract YieldBearingALPVault is ReentrancyGuard {
             shares = fsAlpReceived.mul(totalSupply).div(fsAlpBefore);
         }
         
-        // Mint yALP to receiver
+        // Mint shares
+        require(shares > 0, "YieldBearingALP: zero shares");
         totalSupply = totalSupply.add(shares);
-        balanceOf[_receiver] = balanceOf[_receiver].add(shares);
+        balanceOf[msg.sender] = balanceOf[msg.sender].add(shares);
         
-        emit Transfer(address(0), _receiver, shares);
-        emit Deposit(msg.sender, _receiver, fsAlpReceived, shares);
-    }
-
-    // ========== WITHDRAW FUNCTION ==========
-
-    /**
-     * @notice Withdraw yALP and receive ETH
-     * @param _shares Amount of yALP to burn
-     * @param _minOut Minimum ETH to receive (slippage protection)
-     * @param _receiver Address to receive ETH
-     * @return amountOut Amount of ETH received
-     */
-    function withdrawETH(
-        uint256 _shares,
-        uint256 _minOut,
-        address payable _receiver
-    ) external nonReentrant returns (uint256 amountOut) {
-        require(_shares > 0, "YieldBearingALP: zero shares");
-        require(_shares <= balanceOf[msg.sender], "YieldBearingALP: insufficient shares");
-        require(_receiver != address(0), "YieldBearingALP: zero receiver");
+        // Update last deposit timestamp
+        lastDeposit = block.timestamp;
         
-        // Calculate fsALP amount to unstake
-        uint256 fsAlpAmount = convertToAssets(_shares);
+        emit Transfer(address(0), msg.sender, shares);
+        emit Deposit(msg.sender, msg.sender, fsAlpReceived, shares);
+    }
+    
+    // ========== WITHDRAW FUNCTIONS ==========
+    
+    function withdrawS(uint256 shares, uint256 minOut, address receiver) external nonReentrant returns (uint256 amountOut) {
+        require(shares > 0, "YieldBearingALP: zero shares");
+        require(shares <= balanceOf[msg.sender], "YieldBearingALP: insufficient balance");
+        require(receiver != address(0), "YieldBearingALP: zero receiver");
         
-        // Burn yALP shares
-        totalSupply = totalSupply.sub(_shares);
-        balanceOf[msg.sender] = balanceOf[msg.sender].sub(_shares);
+        // Check cooldown using lastDeposit
+        require(block.timestamp >= withdrawalsAvailableAt(), "YieldBearingALP: cooldown active");
         
-        // Unstake and redeem GLP for ETH
-        amountOut = rewardRouter.unstakeAndRedeemGlpETH(fsAlpAmount, _minOut, _receiver);
+        // Calculate assets to withdraw
+        uint256 assets = convertToAssets(shares);
+        require(assets > 0, "YieldBearingALP: zero assets");
         
-        emit Transfer(msg.sender, address(0), _shares);
-        emit Withdraw(msg.sender, _receiver, msg.sender, fsAlpAmount, _shares);
+        // Burn shares
+        totalSupply = totalSupply.sub(shares);
+        balanceOf[msg.sender] = balanceOf[msg.sender].sub(shares);
+        
+        emit Transfer(msg.sender, address(0), shares);
+        
+        // Unstake and redeem to ETH through reward router
+        amountOut = rewardRouter.unstakeAndRedeemGlpETH(assets, minOut, payable(receiver));
+        require(amountOut > 0, "YieldBearingALP: redeem failed");
+        
+        emit Withdraw(msg.sender, receiver, msg.sender, assets, shares);
     }
-
-    // ========== VIEW FUNCTIONS ==========
-
-    /**
-     * @notice Total amount of fsALP managed by the vault
-     */
-    function totalAssets() public view returns (uint256) {
-        return fsAlp.stakedAmounts(address(this));
-    }
-
-    /**
-     * @notice Convert yALP shares to fsALP assets
-     */
-    function convertToAssets(uint256 shares) public view returns (uint256) {
-        if (totalSupply == 0) return shares;
-        return shares.mul(totalAssets()).div(totalSupply);
-    }
-
-    /**
-     * @notice Convert fsALP assets to yALP shares
-     */
-    function convertToShares(uint256 assets) public view returns (uint256) {
-        uint256 supply = totalSupply;
-        if (supply == 0) return assets;
-        return assets.mul(supply).div(totalAssets());
-    }
-
+    
     // ========== COMPOUND FUNCTION ==========
-
-    /**
-     * @notice Compound WETH rewards by buying more ALP
-     * @dev Can be called by anyone to benefit all vault users
-     */
-    function compound() external nonReentrant {
-        // Claim all rewards
+    
+    function compound() external nonReentrant onlyKeeper {
+        // Claim all rewards (WS and esAMP)
         rewardRouter.claim();
         
-        uint256 wethBalance = IERC20(address(weth)).balanceOf(address(this));
-        if (wethBalance == 0) return;
-
-        // Approve and buy more ALP with WETH
-        IERC20(address(weth)).safeApprove(address(rewardRouter), wethBalance);
+        // Get WS balance
+        uint256 wsBalance = IERC20(address(ws)).balanceOf(address(this));
+        require(wsBalance > 0, "YieldBearingALP: no rewards");
         
-        // Use low-level call to get price for slippage protection
-        (bool success, bytes memory data) = address(glpManager).staticcall(
-            abi.encodeWithSignature("getPrice(bool)", false)
-        );
-        require(success, "Failed to get GLP price");
-        uint256 glpPrice = abi.decode(data, (uint256));
+        // Convert WS to native S by withdrawing
+        ws.withdraw(wsBalance);
         
-        uint256 expectedGlp = wethBalance.mul(10 ** 30).div(glpPrice);
-        uint256 minGlp = expectedGlp.mul(99).div(100); // 1% slippage
+        // Mint and stake more GLP with the S
+        uint256 alpReceived = rewardRouter.mintAndStakeGlpETH{value: wsBalance}(0, 0);
+        require(alpReceived > 0, "YieldBearingALP: compound failed");
         
-        rewardRouter.mintAndStakeGlp(
-            address(weth),
-            wethBalance,
-            0, // minUsdg
-            minGlp
-        );
+        // Track compounded rewards
+        totalCompoundedRewards = totalCompoundedRewards.add(alpReceived);
+        
+        // Update last deposit timestamp (compound also adds liquidity)
+        lastDeposit = block.timestamp;
+        
+        emit Compound(wsBalance, alpReceived);
     }
-
+    
     // ========== ERC20 FUNCTIONS ==========
-
-    function transfer(address recipient, uint256 amount) external returns (bool) {
-        _transfer(msg.sender, recipient, amount);
-        return true;
-    }
-
+    
     function approve(address spender, uint256 amount) external returns (bool) {
         allowance[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
     }
-
+    
+    function transfer(address recipient, uint256 amount) external returns (bool) {
+        _transfer(msg.sender, recipient, amount);
+        return true;
+    }
+    
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
         uint256 currentAllowance = allowance[sender][msg.sender];
         require(currentAllowance >= amount, "YieldBearingALP: insufficient allowance");
         
-        if (currentAllowance != type(uint256).max) {
+        if (currentAllowance != uint256(-1)) {
             allowance[sender][msg.sender] = currentAllowance.sub(amount);
         }
         
@@ -242,20 +272,14 @@ contract YieldBearingALPVault is ReentrancyGuard {
 
     // ========== ADMIN FUNCTIONS ==========
 
+    function setGov(address _gov) external onlyGov {
+        gov = _gov;
+    }
+    
     function setKeeper(address _keeper) external onlyGov {
         keeper = _keeper;
     }
 
-    function setGov(address _gov) external onlyGov {
-        gov = _gov;
-    }
-
-    /**
-     * @notice Recover tokens sent by mistake (except fsALP)
-     * @param _token Token to recover
-     * @param _amount Amount to recover
-     * @param _receiver Address to receive tokens
-     */
     function recoverToken(address _token, uint256 _amount, address _receiver) external onlyGov {
         require(_token != address(fsAlp), "YieldBearingALP: cannot recover fsALP");
         IERC20(_token).safeTransfer(_receiver, _amount);
