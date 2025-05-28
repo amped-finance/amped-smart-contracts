@@ -7,7 +7,7 @@ The YieldBearingALPVault is an EIP-4626 compliant tokenized vault that wraps Amp
 ## Deployed Contract
 
 **Network**: Sonic  
-**Address**: `0x1358cC494A3D2588BB70fDc173EedeE4C5aFBEF3`  
+**Address**: `0x2696351e079b1f411f5e6204c54a3c2dddbe8097`  
 **Token Name**: Yield Bearing ALP  
 **Token Symbol**: yALP  
 
@@ -165,17 +165,17 @@ USE_FRAME_SIGNER=true npx hardhat run scripts/staking/deployYieldBearingALPVault
 
 ### Example Interactions
 ```bash
-YALP_VAULT=0x1358cC494A3D2588BB70fDc173EedeE4C5aFBEF3 npx hardhat run scripts/staking/exampleYALPInteractions.js --network sonic
+YALP_VAULT=0x2696351e079b1f411f5e6204c54a3c2dddbe8097 npx hardhat run scripts/staking/exampleYALPInteractions.js --network sonic
 ```
 
 ### Compound Rewards (Keeper Only)
 ```bash
-YALP_VAULT=0x1358cC494A3D2588BB70fDc173EedeE4C5aFBEF3 npx hardhat run scripts/staking/compoundYALP.js --network sonic
+YALP_VAULT=0x2696351e079b1f411f5e6204c54a3c2dddbe8097 npx hardhat run scripts/staking/compoundYALP.js --network sonic
 ```
 
 ### Check Vault State
 ```bash
-YALP_VAULT=0x1358cC494A3D2588BB70fDc173EedeE4C5aFBEF3 npx hardhat run scripts/staking/getYALPValue.js --network sonic
+YALP_VAULT=0x2696351e079b1f411f5e6204c54a3c2dddbe8097 npx hardhat run scripts/staking/getYALPValue.js --network sonic
 ```
 
 ## Contract Source
