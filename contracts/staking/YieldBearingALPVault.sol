@@ -42,8 +42,8 @@ contract YieldBearingALPVault is ReentrancyGuard {
     // Compound tracking
     uint256 public totalCompoundedRewards;
     
-    // Deposit tracking
-    uint256 public lastDeposit;
+    // Deposit tracking - removed as we rely on GLP Manager's cooldown
+    // mapping(address => uint256) public lastDeposit;
     
     // Events
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -95,12 +95,9 @@ contract YieldBearingALPVault is ReentrancyGuard {
     
     function convertToAssets(uint256 shares) public view returns (uint256) {
         uint256 supply = totalSupply;
-        return supply == 0 ? shares : shares.mul(totalAssets()).div(supply);
+        return supply == 0 ? 0 : shares.mul(totalAssets()).div(supply);
     }
     
-    function previewDeposit(uint256 assets) public view returns (uint256) {
-        return convertToShares(assets);
-    }
     
     function previewMint(uint256 shares) public view returns (uint256) {
         uint256 supply = totalSupply;
@@ -143,12 +140,7 @@ contract YieldBearingALPVault is ReentrancyGuard {
     }
     
     // ========== COOLDOWN FUNCTIONS ==========
-    
-    function withdrawalsAvailableAt() public view returns (uint256) {
-        if (lastDeposit == 0) return 0;
-        uint256 cooldown = glpManager.cooldownDuration();
-        return lastDeposit.add(cooldown);
-    }
+    // Removed - relying on GLP Manager's cooldown mechanism instead
     
     // ========== DEPOSIT FUNCTIONS ==========
     
@@ -174,8 +166,7 @@ contract YieldBearingALPVault is ReentrancyGuard {
         totalSupply = totalSupply.add(shares);
         balanceOf[msg.sender] = balanceOf[msg.sender].add(shares);
         
-        // Update last deposit timestamp
-        lastDeposit = block.timestamp;
+        // Cooldown is now handled by GLP Manager
         
         emit Transfer(address(0), msg.sender, shares);
         emit Deposit(msg.sender, msg.sender, fsAlpReceived, shares);
@@ -188,8 +179,7 @@ contract YieldBearingALPVault is ReentrancyGuard {
         require(shares <= balanceOf[msg.sender], "YieldBearingALP: insufficient balance");
         require(receiver != address(0), "YieldBearingALP: zero receiver");
         
-        // Check cooldown using lastDeposit
-        require(block.timestamp >= withdrawalsAvailableAt(), "YieldBearingALP: cooldown active");
+        // Cooldown check removed - GLP Manager handles this
         
         // Calculate assets to withdraw
         uint256 assets = convertToAssets(shares);
@@ -228,8 +218,7 @@ contract YieldBearingALPVault is ReentrancyGuard {
         // Track compounded rewards
         totalCompoundedRewards = totalCompoundedRewards.add(alpReceived);
         
-        // Update last deposit timestamp (compound also adds liquidity)
-        lastDeposit = block.timestamp;
+        // Note: compound does not update any user's cooldown as it doesn't affect individual positions
         
         emit Compound(wsBalance, alpReceived);
     }
@@ -281,7 +270,12 @@ contract YieldBearingALPVault is ReentrancyGuard {
     }
 
     function recoverToken(address _token, uint256 _amount, address _receiver) external onlyGov {
-        require(_token != address(fsAlp), "YieldBearingALP: cannot recover fsALP");
+        require(
+            _token != address(fsAlp) && 
+            _token != address(ws) && 
+            _token != address(esAmp), 
+            "YieldBearingALP: cannot recover core vault tokens"
+        );
         IERC20(_token).safeTransfer(_receiver, _amount);
     }
 
