@@ -90,7 +90,7 @@ contract YieldBearingALPVault is ReentrancyGuard {
     
     function convertToShares(uint256 assets) public view returns (uint256) {
         uint256 supply = totalSupply;
-        return supply == 0 ? assets : assets.mul(supply).div(totalAssets());
+        return supply == 0 ? 0 : assets.mul(supply).div(totalAssets());
     }
     
     function convertToAssets(uint256 shares) public view returns (uint256) {
