@@ -5,16 +5,16 @@ pragma solidity 0.6.12;
 contract Governable {
     address public gov;
 
+    modifier onlyGov() {
+        require(gov == msg.sender, "Governable: forbidden");
+        _;
+    }
+
     constructor() public {
         gov = msg.sender;
     }
 
-    modifier onlyGov() {
-        require(msg.sender == gov, "Governable: forbidden");
-        _;
-    }
-
-    function setGov(address _gov) external onlyGov {
+    function setGov(address _gov) external virtual onlyGov {
         gov = _gov;
     }
 }

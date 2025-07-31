@@ -1,37 +1,12 @@
-const { contractAt, sendTxn } = require("../shared/helpers")
+const { contractAt, sendTxn, getFrameSigner } = require("../shared/helpers")
 const { expandDecimals } = require("../../test/shared/utilities")
 const hre = require("hardhat");
 const { ethers } = hre;
 const { JsonRpcProvider } = ethers.providers;
+const baseDeployments = require("../../scripts/deploy-base.json");
 
 const network = (process.env.HARDHAT_NETWORK || 'mainnet');
 const tokens = require('./tokens')[network];
-
-// Helper to obtain signer (Frame or default)
-async function getDeployerSigner() {
-  if (process.env.USE_FRAME_SIGNER === 'true') {
-    const targetChainId = hre.network.config?.chainId ?? (await ethers.provider.getNetwork()).chainId;
-    // Flexible provider to avoid mismatch errors
-    const frameProvider = new JsonRpcProvider("http://127.0.0.1:1248", "any");
-
-    // Attempt auto‑switch if necessary
-    const currentNet = await frameProvider.getNetwork();
-    if (currentNet.chainId !== targetChainId) {
-      const hexId = "0x" + targetChainId.toString(16);
-      try {
-        await frameProvider.send("wallet_switchEthereumChain", [{ chainId: hexId }]);
-      } catch (_) {/* ignore */}
-      const newNet = await frameProvider.getNetwork();
-      if (newNet.chainId !== targetChainId) {
-        throw new Error(`Frame network mismatch (have ${newNet.chainId}, need ${targetChainId}). Please switch manually.`);
-      }
-    }
-    return frameProvider.getSigner();
-  }
-
-  const [defaultSigner] = await ethers.getSigners();
-  return defaultSigner;
-}
 
 // Convenience wrappers that inject signer
 function withSigner(signer) {
@@ -65,22 +40,7 @@ async function withdrawFeesBsc(signer) {
 
   const tokens = [btc, eth, bnb, busd, usdc, usdt]
 
-  for (let i = 0; i < tokens.length; i++) {
-    const token = await contractAt("Token", tokens[i].address)
-    const poolAmount = await vault.poolAmounts(token.address)
-    const feeReserve = await vault.feeReserves(token.address)
-    const balance = await token.balanceOf(vault.address)
-    const vaultAmount = poolAmount.add(feeReserve)
-    const acccountBalance = await token.balanceOf(receiver.address)
-
-    if (vaultAmount.gt(balance)) {
-      const diff = vaultAmount.sub(balance)
-      console.log(`${token.address}: ${diff.toString()}, ${acccountBalance.toString()}`)
-      await sendTxn(balanceUpdater.updateBalance(vault.address, token.address, usdg.address, expandDecimals(1, 18)), `updateBalance ${i}`)
-    }
-
-    await sendTxn(gov.withdrawFees(vault.address, token.address, receiver.address, { gasLimit: 500000 }), `gov.withdrawFees ${i}`)
-  }
+  await sendTxn(gov.batchWithdrawFees(vault.address, tokens.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
 async function withdrawFeesArb(signer) {
@@ -91,18 +51,6 @@ async function withdrawFeesArb(signer) {
   const { btc, eth, usdc, link, uni, usdt, mim, frax, dai } = tokens
 
   const tokenArr = [btc, eth, usdc, link, uni, usdt, frax, dai]
-
-  for (let i = 0; i < tokenArr.length; i++) {
-    const token = await contractAt("Token", tokenArr[i].address)
-    const poolAmount = await vault.poolAmounts(token.address)
-    const feeReserve = await vault.feeReserves(token.address)
-    const balance = await token.balanceOf(vault.address)
-    const vaultAmount = poolAmount.add(feeReserve)
-
-    if (vaultAmount.gt(balance)) {
-      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
-    }
-  }
 
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
@@ -116,24 +64,12 @@ async function withdrawFeesAvax(signer) {
 
   const tokenArr = [avax, btc, btcb, eth, usdce, usdc]
 
-  for (let i = 0; i < tokenArr.length; i++) {
-    const token = await contractAt("Token", tokenArr[i].address)
-    const poolAmount = await vault.poolAmounts(token.address)
-    const feeReserve = await vault.feeReserves(token.address)
-    const balance = await token.balanceOf(vault.address)
-    const vaultAmount = poolAmount.add(feeReserve)
-
-    if (vaultAmount.gt(balance)) {
-      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
-    }
-  }
-
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
 async function withdrawFeesLightlink(signer) {
   const { contractAt, sendTxn } = withSigner(signer);
-  const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
+  const receiver = { address: "0x254081ACC3c468cc7020A6A0264626c1A9103CEF" }
   const vault = await contractAt("Vault", "0xa6b88069EDC7a0C2F062226743C8985FF72bB2Eb")
   const gov = await contractAt("Timelock", "0x585693AedB4c18424ED7cCd13589c048BdE00785")
 
@@ -145,20 +81,9 @@ async function withdrawFeesLightlink(signer) {
   const wbnb = { address: "0x81A1f39f7394c4849E4261Aa02AaC73865d13774" }
   const weth = { address: "0x7EbeF2A4b1B09381Ec5B9dF8C5c6f2dBECA59c73" }
   const wbtc = { address: "0x46A5e3Fa4a02B9Ae43D9dF9408C86eD643144A67" }
+  const shadow = { address: "0x3333b97138d4b086720b5ae8a7844b1345a33333" }
 
-  const tokenArr = [usdt, usdc, usdtsg, usdcsg, ll, wbnb, weth, wbtc]
-
-  for (let i = 0; i < tokenArr.length; i++) {
-    const token = await contractAt("Token", tokenArr[i].address)
-    const poolAmount = await vault.poolAmounts(token.address)
-    const feeReserve = await vault.feeReserves(token.address)
-    const balance = await token.balanceOf(vault.address)
-    const vaultAmount = poolAmount.add(feeReserve)
-
-    if (vaultAmount.gt(balance)) {
-      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
-    }
-  }
+  const tokenArr = [usdt, usdc, usdtsg, usdcsg, ll, wbnb, weth, wbtc, shadow]
 
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
@@ -175,27 +100,16 @@ async function withdrawFeesSonic(signer) {
   const anon = { address: "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c" }
   const sts = { address: "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955" }
   const scusd = { address: "0xd3DCe716f3eF535C5Ff8d041c1A41C3bd89b97aE" }
+  const shadow = { address: "0x3333b97138d4b086720b5ae8a7844b1345a33333" }
 
-  const tokenArr = [usdc, ws, weth, anon, sts, scusd]
-
-  for (let i = 0; i < tokenArr.length; i++) {
-    const token = await contractAt("Token", tokenArr[i].address)
-    const poolAmount = await vault.poolAmounts(token.address)
-    const feeReserve = await vault.feeReserves(token.address)
-    const balance = await token.balanceOf(vault.address)
-    const vaultAmount = poolAmount.add(feeReserve)
-
-    if (vaultAmount.gt(balance)) {
-      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
-    }
-  }
+  const tokenArr = [usdc, ws, weth, anon, sts, scusd, shadow]
 
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
 async function withdrawFeesBerachain(signer) {
   const { contractAt, sendTxn } = withSigner(signer);
-  const receiver = { address: "0xB1A9056a5921C0F6f2C68Ce19E08cA9A6D5FD904" }
+  const receiver = { address: "0xcD413cC5EC244b5B04c210cA70b0B4a16b563e0E" }
   const vault = await contractAt("Vault", "0xc3727b7E7F3FF97A111c92d3eE05529dA7BD2f48")
   const gov = await contractAt("Timelock", "0xfCE9Fb0Fd92d6A19b1ee1CcaEb9d0480617E726e")
 
@@ -206,23 +120,50 @@ async function withdrawFeesBerachain(signer) {
   
   const tokenArr = [usdc, wbera, honey, weth]
 
-  for (let i = 0; i < tokenArr.length; i++) {
-    const token = await contractAt("Token", tokenArr[i].address)
-    const poolAmount = await vault.poolAmounts(token.address)
-    const feeReserve = await vault.feeReserves(token.address)
-    const balance = await token.balanceOf(vault.address)
-    const vaultAmount = poolAmount.add(feeReserve)
-
-    if (vaultAmount.gt(balance)) {
-      throw new Error("vaultAmount > vault.balance", vaultAmount.toString(), balance.toString())
-    }
-  }
-
   await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `gov.batchWithdrawFees`)
 }
 
+async function withdrawFeesBase(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
+  const receiver = { address: "0xd99C871c8130B03C8BB597A74fb5EAA7a46864Bb" };
+  const vaultAddr = "0xed33E4767B8d68bd7F64c429Ce4989686426a926";
+  const timelockAddr = baseDeployments.find(x => x.name === "Timelock").imple;
+  const vault = await contractAt("Vault", vaultAddr);
+  const gov = await contractAt("Timelock", timelockAddr);
+
+  const { usdc, weth, cbbtc } = tokens;
+  const tokenArr = [usdc, weth, cbbtc];
+
+  await sendTxn(gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address)), `[Base] gov.batchWithdrawFees`);
+  console.log(`[Base] Batch fee withdrawal transaction sent.`);
+}
+
+async function withdrawFeesSuperseed(signer) {
+  const { contractAt, sendTxn } = withSigner(signer);
+  const receiver = { address: "0xd99C871c8130B03C8BB597A74fb5EAA7a46864Bb" }; // Use same as base/sonic for now
+  const vaultAddr = "0x7f27Ce4B02b51Ea3a433eD130259F8A173F7c6C7"; // from deploy-superseed.json
+  const timelockAddr = "0xD4A870592B6A29f3904D1a3077AD47ED11d01400"; // from deploy-superseed.json
+  const vault = await contractAt("Vault", vaultAddr);
+  const gov = await contractAt("Timelock", timelockAddr);
+
+  const { weth, usdc, ousdt } = tokens;
+  const tokenArr = [weth, usdc, ousdt];
+
+  // EIP-1559 gas overrides for superseed network
+  const gasOverrides = {
+    maxPriorityFeePerGas: ethers.BigNumber.from("1100000"), // 0.0011 gwei
+    maxFeePerGas: ethers.utils.parseUnits("10", "gwei")    // 10 gwei
+  };
+
+  await sendTxn(
+    gov.batchWithdrawFees(vault.address, tokenArr.map(t => t.address), gasOverrides),
+    `[Superseed] gov.batchWithdrawFees`
+  );
+  console.log(`[Superseed] Batch fee withdrawal transaction sent.`);
+}
+
 async function main() {
-  const signer = await getDeployerSigner();
+  const signer = await getFrameSigner();
 
   if (network === "bsc") {
     await withdrawFeesBsc(signer)
@@ -247,6 +188,16 @@ async function main() {
   if (network === "berachain") {
     await withdrawFeesBerachain(signer)
     return
+  }
+
+  if (network === "base") {
+    await withdrawFeesBase(signer);
+    return;
+  }
+
+  if (network === "superseed") {
+    await withdrawFeesSuperseed(signer);
+    return;
   }
 
   await withdrawFeesArb(signer)

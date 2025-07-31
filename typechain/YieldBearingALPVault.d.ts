@@ -22,48 +22,43 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface YieldBearingALPVaultInterface extends ethers.utils.Interface {
   functions: {
-    "ETH()": FunctionFragment;
-    "FEE_DENOMINATOR()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
+    "asset()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "compound()": FunctionFragment;
     "convertToAssets(uint256)": FunctionFragment;
     "convertToShares(uint256)": FunctionFragment;
     "decimals()": FunctionFragment;
-    "deposit(address,uint256,uint256,uint256,address)": FunctionFragment;
-    "depositETH(uint256,uint256,address)": FunctionFragment;
+    "depositS(uint256,uint256)": FunctionFragment;
     "esAmp()": FunctionFragment;
-    "feeRecipient()": FunctionFragment;
     "fsAlp()": FunctionFragment;
+    "getAum(bool)": FunctionFragment;
     "glpManager()": FunctionFragment;
     "gov()": FunctionFragment;
     "keeper()": FunctionFragment;
-    "maxSlippage()": FunctionFragment;
+    "maxDeposit(address)": FunctionFragment;
+    "maxMint(address)": FunctionFragment;
+    "maxRedeem(address)": FunctionFragment;
+    "maxWithdraw(address)": FunctionFragment;
     "name()": FunctionFragment;
-    "performanceFee()": FunctionFragment;
+    "previewMint(uint256)": FunctionFragment;
+    "previewRedeem(uint256)": FunctionFragment;
+    "previewWithdraw(uint256)": FunctionFragment;
+    "recoverToken(address,uint256,address)": FunctionFragment;
     "rewardRouter()": FunctionFragment;
-    "setFeeRecipient(address)": FunctionFragment;
     "setGov(address)": FunctionFragment;
     "setKeeper(address)": FunctionFragment;
-    "setMaxSlippage(uint256)": FunctionFragment;
-    "setPerformanceFee(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalAssets()": FunctionFragment;
     "totalCompoundedRewards()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "weth()": FunctionFragment;
-    "withdraw(uint256,address,uint256,address)": FunctionFragment;
-    "withdrawETH(uint256,uint256,address)": FunctionFragment;
+    "withdrawS(uint256,uint256,address)": FunctionFragment;
+    "ws()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "ETH", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "FEE_DENOMINATOR",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -72,6 +67,7 @@ interface YieldBearingALPVaultInterface extends ethers.utils.Interface {
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "asset", values?: undefined): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(functionFragment: "compound", values?: undefined): string;
   encodeFunctionData(
@@ -84,52 +80,45 @@ interface YieldBearingALPVaultInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "deposit",
-    values: [string, BigNumberish, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositETH",
-    values: [BigNumberish, BigNumberish, string]
+    functionFragment: "depositS",
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "esAmp", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "feeRecipient",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "fsAlp", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getAum", values: [boolean]): string;
   encodeFunctionData(
     functionFragment: "glpManager",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "gov", values?: undefined): string;
   encodeFunctionData(functionFragment: "keeper", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "maxSlippage",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "maxDeposit", values: [string]): string;
+  encodeFunctionData(functionFragment: "maxMint", values: [string]): string;
+  encodeFunctionData(functionFragment: "maxRedeem", values: [string]): string;
+  encodeFunctionData(functionFragment: "maxWithdraw", values: [string]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "performanceFee",
-    values?: undefined
+    functionFragment: "previewMint",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "previewRedeem",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "previewWithdraw",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "recoverToken",
+    values: [string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "rewardRouter",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "setFeeRecipient",
-    values: [string]
-  ): string;
   encodeFunctionData(functionFragment: "setGov", values: [string]): string;
   encodeFunctionData(functionFragment: "setKeeper", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "setMaxSlippage",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setPerformanceFee",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalAssets",
@@ -151,23 +140,15 @@ interface YieldBearingALPVaultInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "weth", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [BigNumberish, string, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawETH",
+    functionFragment: "withdrawS",
     values: [BigNumberish, BigNumberish, string]
   ): string;
+  encodeFunctionData(functionFragment: "ws", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "ETH", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "FEE_DENOMINATOR",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "asset", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "compound", data: BytesLike): Result;
   decodeFunctionResult(
@@ -179,44 +160,43 @@ interface YieldBearingALPVaultInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositETH", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "depositS", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "esAmp", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "feeRecipient",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "fsAlp", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getAum", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "glpManager", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "gov", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "keeper", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "maxDeposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "maxMint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "maxRedeem", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "maxSlippage",
+    functionFragment: "maxWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "performanceFee",
+    functionFragment: "previewMint",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "previewRedeem",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "previewWithdraw",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "recoverToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "rewardRouter",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setFeeRecipient",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "setGov", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setKeeper", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setMaxSlippage",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setPerformanceFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalAssets",
@@ -235,16 +215,12 @@ interface YieldBearingALPVaultInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawETH",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "withdrawS", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ws", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
-    "Compound(uint256,uint256,uint256)": EventFragment;
+    "Compound(uint256,uint256)": EventFragment;
     "Deposit(address,address,uint256,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "Withdraw(address,address,address,uint256,uint256)": EventFragment;
@@ -266,11 +242,7 @@ export type ApprovalEvent = TypedEvent<
 >;
 
 export type CompoundEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber] & {
-    wethAmount: BigNumber;
-    alpAmount: BigNumber;
-    performanceFeeAmount: BigNumber;
-  }
+  [BigNumber, BigNumber] & { wsAmount: BigNumber; alpGained: BigNumber }
 >;
 
 export type DepositEvent = TypedEvent<
@@ -340,10 +312,6 @@ export class YieldBearingALPVault extends BaseContract {
   interface: YieldBearingALPVaultInterface;
 
   functions: {
-    ETH(overrides?: CallOverrides): Promise<[string]>;
-
-    FEE_DENOMINATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     allowance(
       arg0: string,
       arg1: string,
@@ -355,6 +323,8 @@ export class YieldBearingALPVault extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    asset(overrides?: CallOverrides): Promise<[string]>;
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -374,27 +344,17 @@ export class YieldBearingALPVault extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    deposit(
-      _token: string,
-      _amount: BigNumberish,
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    depositETH(
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
+    depositS(
+      minUsdg: BigNumberish,
+      minGlp: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     esAmp(overrides?: CallOverrides): Promise<[string]>;
 
-    feeRecipient(overrides?: CallOverrides): Promise<[string]>;
-
     fsAlp(overrides?: CallOverrides): Promise<[string]>;
+
+    getAum(maximise: boolean, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     glpManager(overrides?: CallOverrides): Promise<[string]>;
 
@@ -402,18 +362,39 @@ export class YieldBearingALPVault extends BaseContract {
 
     keeper(overrides?: CallOverrides): Promise<[string]>;
 
-    maxSlippage(overrides?: CallOverrides): Promise<[BigNumber]>;
+    maxDeposit(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    maxMint(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    maxRedeem(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    maxWithdraw(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    performanceFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+    previewMint(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    rewardRouter(overrides?: CallOverrides): Promise<[string]>;
+    previewRedeem(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    setFeeRecipient(
-      _feeRecipient: string,
+    previewWithdraw(
+      assets: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    recoverToken(
+      _token: string,
+      _amount: BigNumberish,
+      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    rewardRouter(overrides?: CallOverrides): Promise<[string]>;
 
     setGov(
       _gov: string,
@@ -422,16 +403,6 @@ export class YieldBearingALPVault extends BaseContract {
 
     setKeeper(
       _keeper: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setMaxSlippage(
-      _maxSlippage: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setPerformanceFee(
-      _performanceFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -456,27 +427,15 @@ export class YieldBearingALPVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    weth(overrides?: CallOverrides): Promise<[string]>;
-
-    withdraw(
-      _shares: BigNumberish,
-      _tokenOut: string,
-      _minOut: BigNumberish,
-      _receiver: string,
+    withdrawS(
+      shares: BigNumberish,
+      minOut: BigNumberish,
+      receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    withdrawETH(
-      _shares: BigNumberish,
-      _minOut: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ws(overrides?: CallOverrides): Promise<[string]>;
   };
-
-  ETH(overrides?: CallOverrides): Promise<string>;
-
-  FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     arg0: string,
@@ -489,6 +448,8 @@ export class YieldBearingALPVault extends BaseContract {
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  asset(overrides?: CallOverrides): Promise<string>;
 
   balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -508,27 +469,17 @@ export class YieldBearingALPVault extends BaseContract {
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
-  deposit(
-    _token: string,
-    _amount: BigNumberish,
-    _minUsdg: BigNumberish,
-    _minGlp: BigNumberish,
-    _receiver: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  depositETH(
-    _minUsdg: BigNumberish,
-    _minGlp: BigNumberish,
-    _receiver: string,
+  depositS(
+    minUsdg: BigNumberish,
+    minGlp: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   esAmp(overrides?: CallOverrides): Promise<string>;
 
-  feeRecipient(overrides?: CallOverrides): Promise<string>;
-
   fsAlp(overrides?: CallOverrides): Promise<string>;
+
+  getAum(maximise: boolean, overrides?: CallOverrides): Promise<BigNumber>;
 
   glpManager(overrides?: CallOverrides): Promise<string>;
 
@@ -536,18 +487,39 @@ export class YieldBearingALPVault extends BaseContract {
 
   keeper(overrides?: CallOverrides): Promise<string>;
 
-  maxSlippage(overrides?: CallOverrides): Promise<BigNumber>;
+  maxDeposit(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  maxMint(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  maxRedeem(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  maxWithdraw(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  performanceFee(overrides?: CallOverrides): Promise<BigNumber>;
+  previewMint(
+    shares: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  rewardRouter(overrides?: CallOverrides): Promise<string>;
+  previewRedeem(
+    shares: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  setFeeRecipient(
-    _feeRecipient: string,
+  previewWithdraw(
+    assets: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  recoverToken(
+    _token: string,
+    _amount: BigNumberish,
+    _receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  rewardRouter(overrides?: CallOverrides): Promise<string>;
 
   setGov(
     _gov: string,
@@ -556,16 +528,6 @@ export class YieldBearingALPVault extends BaseContract {
 
   setKeeper(
     _keeper: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setMaxSlippage(
-    _maxSlippage: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setPerformanceFee(
-    _performanceFee: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -590,28 +552,16 @@ export class YieldBearingALPVault extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  weth(overrides?: CallOverrides): Promise<string>;
-
-  withdraw(
-    _shares: BigNumberish,
-    _tokenOut: string,
-    _minOut: BigNumberish,
-    _receiver: string,
+  withdrawS(
+    shares: BigNumberish,
+    minOut: BigNumberish,
+    receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  withdrawETH(
-    _shares: BigNumberish,
-    _minOut: BigNumberish,
-    _receiver: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ws(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    ETH(overrides?: CallOverrides): Promise<string>;
-
-    FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
       arg0: string,
       arg1: string,
@@ -623,6 +573,8 @@ export class YieldBearingALPVault extends BaseContract {
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    asset(overrides?: CallOverrides): Promise<string>;
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -640,27 +592,17 @@ export class YieldBearingALPVault extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
-    deposit(
-      _token: string,
-      _amount: BigNumberish,
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    depositETH(
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
+    depositS(
+      minUsdg: BigNumberish,
+      minGlp: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     esAmp(overrides?: CallOverrides): Promise<string>;
 
-    feeRecipient(overrides?: CallOverrides): Promise<string>;
-
     fsAlp(overrides?: CallOverrides): Promise<string>;
+
+    getAum(maximise: boolean, overrides?: CallOverrides): Promise<BigNumber>;
 
     glpManager(overrides?: CallOverrides): Promise<string>;
 
@@ -668,32 +610,43 @@ export class YieldBearingALPVault extends BaseContract {
 
     keeper(overrides?: CallOverrides): Promise<string>;
 
-    maxSlippage(overrides?: CallOverrides): Promise<BigNumber>;
+    maxDeposit(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxMint(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxRedeem(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxWithdraw(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    performanceFee(overrides?: CallOverrides): Promise<BigNumber>;
+    previewMint(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    rewardRouter(overrides?: CallOverrides): Promise<string>;
+    previewRedeem(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    setFeeRecipient(
-      _feeRecipient: string,
+    previewWithdraw(
+      assets: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    recoverToken(
+      _token: string,
+      _amount: BigNumberish,
+      _receiver: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    rewardRouter(overrides?: CallOverrides): Promise<string>;
 
     setGov(_gov: string, overrides?: CallOverrides): Promise<void>;
 
     setKeeper(_keeper: string, overrides?: CallOverrides): Promise<void>;
-
-    setMaxSlippage(
-      _maxSlippage: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setPerformanceFee(
-      _performanceFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -716,22 +669,14 @@ export class YieldBearingALPVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    weth(overrides?: CallOverrides): Promise<string>;
-
-    withdraw(
-      _shares: BigNumberish,
-      _tokenOut: string,
-      _minOut: BigNumberish,
-      _receiver: string,
+    withdrawS(
+      shares: BigNumberish,
+      minOut: BigNumberish,
+      receiver: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    withdrawETH(
-      _shares: BigNumberish,
-      _minOut: BigNumberish,
-      _receiver: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ws(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -753,30 +698,20 @@ export class YieldBearingALPVault extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
-    "Compound(uint256,uint256,uint256)"(
-      wethAmount?: null,
-      alpAmount?: null,
-      performanceFeeAmount?: null
+    "Compound(uint256,uint256)"(
+      wsAmount?: null,
+      alpGained?: null
     ): TypedEventFilter<
-      [BigNumber, BigNumber, BigNumber],
-      {
-        wethAmount: BigNumber;
-        alpAmount: BigNumber;
-        performanceFeeAmount: BigNumber;
-      }
+      [BigNumber, BigNumber],
+      { wsAmount: BigNumber; alpGained: BigNumber }
     >;
 
     Compound(
-      wethAmount?: null,
-      alpAmount?: null,
-      performanceFeeAmount?: null
+      wsAmount?: null,
+      alpGained?: null
     ): TypedEventFilter<
-      [BigNumber, BigNumber, BigNumber],
-      {
-        wethAmount: BigNumber;
-        alpAmount: BigNumber;
-        performanceFeeAmount: BigNumber;
-      }
+      [BigNumber, BigNumber],
+      { wsAmount: BigNumber; alpGained: BigNumber }
     >;
 
     "Deposit(address,address,uint256,uint256)"(
@@ -853,10 +788,6 @@ export class YieldBearingALPVault extends BaseContract {
   };
 
   estimateGas: {
-    ETH(overrides?: CallOverrides): Promise<BigNumber>;
-
-    FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
       arg0: string,
       arg1: string,
@@ -868,6 +799,8 @@ export class YieldBearingALPVault extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    asset(overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -887,27 +820,17 @@ export class YieldBearingALPVault extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    deposit(
-      _token: string,
-      _amount: BigNumberish,
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    depositETH(
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
+    depositS(
+      minUsdg: BigNumberish,
+      minGlp: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     esAmp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    feeRecipient(overrides?: CallOverrides): Promise<BigNumber>;
-
     fsAlp(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getAum(maximise: boolean, overrides?: CallOverrides): Promise<BigNumber>;
 
     glpManager(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -915,18 +838,39 @@ export class YieldBearingALPVault extends BaseContract {
 
     keeper(overrides?: CallOverrides): Promise<BigNumber>;
 
-    maxSlippage(overrides?: CallOverrides): Promise<BigNumber>;
+    maxDeposit(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxMint(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxRedeem(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxWithdraw(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    performanceFee(overrides?: CallOverrides): Promise<BigNumber>;
+    previewMint(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    rewardRouter(overrides?: CallOverrides): Promise<BigNumber>;
+    previewRedeem(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    setFeeRecipient(
-      _feeRecipient: string,
+    previewWithdraw(
+      assets: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    recoverToken(
+      _token: string,
+      _amount: BigNumberish,
+      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    rewardRouter(overrides?: CallOverrides): Promise<BigNumber>;
 
     setGov(
       _gov: string,
@@ -935,16 +879,6 @@ export class YieldBearingALPVault extends BaseContract {
 
     setKeeper(
       _keeper: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setMaxSlippage(
-      _maxSlippage: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setPerformanceFee(
-      _performanceFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -969,29 +903,17 @@ export class YieldBearingALPVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    weth(overrides?: CallOverrides): Promise<BigNumber>;
-
-    withdraw(
-      _shares: BigNumberish,
-      _tokenOut: string,
-      _minOut: BigNumberish,
-      _receiver: string,
+    withdrawS(
+      shares: BigNumberish,
+      minOut: BigNumberish,
+      receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    withdrawETH(
-      _shares: BigNumberish,
-      _minOut: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ws(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    ETH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    FEE_DENOMINATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     allowance(
       arg0: string,
       arg1: string,
@@ -1003,6 +925,8 @@ export class YieldBearingALPVault extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    asset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     balanceOf(
       arg0: string,
@@ -1025,27 +949,20 @@ export class YieldBearingALPVault extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    deposit(
-      _token: string,
-      _amount: BigNumberish,
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    depositETH(
-      _minUsdg: BigNumberish,
-      _minGlp: BigNumberish,
-      _receiver: string,
+    depositS(
+      minUsdg: BigNumberish,
+      minGlp: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     esAmp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    feeRecipient(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     fsAlp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getAum(
+      maximise: boolean,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     glpManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1053,18 +970,51 @@ export class YieldBearingALPVault extends BaseContract {
 
     keeper(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    maxSlippage(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    maxDeposit(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    maxMint(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    maxRedeem(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    maxWithdraw(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    performanceFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    previewMint(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    rewardRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    previewRedeem(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    setFeeRecipient(
-      _feeRecipient: string,
+    previewWithdraw(
+      assets: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    recoverToken(
+      _token: string,
+      _amount: BigNumberish,
+      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    rewardRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setGov(
       _gov: string,
@@ -1073,16 +1023,6 @@ export class YieldBearingALPVault extends BaseContract {
 
     setKeeper(
       _keeper: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setMaxSlippage(
-      _maxSlippage: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setPerformanceFee(
-      _performanceFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1109,21 +1049,13 @@ export class YieldBearingALPVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    weth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    withdraw(
-      _shares: BigNumberish,
-      _tokenOut: string,
-      _minOut: BigNumberish,
-      _receiver: string,
+    withdrawS(
+      shares: BigNumberish,
+      minOut: BigNumberish,
+      receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    withdrawETH(
-      _shares: BigNumberish,
-      _minOut: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ws(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

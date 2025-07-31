@@ -14,18 +14,27 @@ const { deploy_sonic } = require('./networks/sonic')
 const { deploy_berachain } = require('./networks/berachain')
 const { deploy_megaeth } = require('./networks/megaeth') // Add this line
 const { deploy_superseed } = require('./networks/superseed') // Add superseed import
+const { deploy_basesepolia } = require('./networks/basesepolia') // Add basesepolia import
 const { setNetwork } = require("./shared/syncParams")
 const fs = require('fs'); // Added for file logging
 const { JsonRpcProvider } = hre.ethers.providers; // Added for Frame signer
 
 async function main() {
+  // Log the environment variable value
+  console.log(`[Debug] process.env.USE_FRAME_SIGNER: ${process.env.USE_FRAME_SIGNER}`);
+
   const { ethers } = hre; // Import ethers
 
   // --- Determine Deployer Signer ---
   let deployerSigner;
   let deployerAddress;
 
-  if (process.env.USE_FRAME_SIGNER === 'true') {
+  // Convert to lowercase for case-insensitive comparison
+  const useFrame = process.env.USE_FRAME_SIGNER?.toLowerCase() === 'true';
+
+  if (useFrame) {
+    // Log entry into this block
+    console.log("[Debug] Entering Frame signer block...");
     console.log("[Signer] Attempting to use Frame signer...");
     try {
       const targetChainId = hre.network.config?.chainId ?? (await ethers.provider.getNetwork()).chainId;
@@ -250,11 +259,41 @@ async function main() {
       // Wait for the deployment transaction to be confirmed
       await contract.deployed();
 
+      // Filter out gas overrides from arguments before logging
+      let loggedArgs = [...args]; // Create a copy
+      if (
+        hre.network.name === "superseed" &&
+        loggedArgs.length > 0 &&
+        typeof loggedArgs[loggedArgs.length - 1] === "object" &&
+        !Array.isArray(loggedArgs[loggedArgs.length - 1]) &&
+        (loggedArgs[loggedArgs.length - 1].maxPriorityFeePerGas !== undefined || loggedArgs[loggedArgs.length - 1].maxFeePerGas !== undefined)
+      ) {
+        // Check if the overrides object contained ONLY gas keys. If so, pop it.
+        // Otherwise, just remove the gas keys from the existing object (more complex, maybe not needed yet)
+        const lastArg = loggedArgs[loggedArgs.length - 1];
+        const keys = Object.keys(lastArg);
+        const gasKeys = ['maxPriorityFeePerGas', 'maxFeePerGas'];
+        const otherKeys = keys.filter(k => !gasKeys.includes(k));
+        
+        // If the last argument only contains gas keys (or potentially other ethers-specific overrides like 'gasLimit', 'value', 'nonce'), remove it entirely.
+        // This simple check assumes we don't intentionally pass constructor args that look like override objects.
+        if (otherKeys.length === 0 || otherKeys.every(k => ['gasLimit', 'value', 'nonce', 'type', 'accessList'].includes(k))) {
+          loggedArgs.pop(); 
+        }
+        // Consider else block here: if other keys exist, clone the object and delete only gas keys
+        // else { 
+        //   const cleanedLastArg = { ...lastArg };
+        //   delete cleanedLastArg.maxPriorityFeePerGas;
+        //   delete cleanedLastArg.maxFeePerGas;
+        //   loggedArgs[loggedArgs.length - 1] = cleanedLastArg;
+        // }
+      }
+
       // Log the details
       const logEntry = {
         contractName: name,
         address: contract.address,
-        arguments: args,
+        arguments: loggedArgs, // Use the filtered arguments
         timestamp: new Date().toISOString()
       };
       console.log(`[Deployment Log] Deployed ${name} to ${contract.address}`);
@@ -285,7 +324,7 @@ async function main() {
   // --- END ADDED DEPLOYMENT LOGGING ---
 
   // Log account info only if not using Frame (already logged above)
-  if (process.env.USE_FRAME_SIGNER !== 'true') {
+  if (!useFrame) {
     const accounts = await hre.ethers.getSigners()
     const provider = hre.ethers.provider
     for (const account of accounts) {
@@ -321,6 +360,8 @@ async function main() {
     await deploy_megaeth(deployerSigner)
   } else if (hre.network.name === "superseed") {
     await deploy_superseed(deployerSigner)
+  } else if (hre.network.name === "basesepolia") {
+    await deploy_basesepolia(deployerSigner)
   }
 }
 

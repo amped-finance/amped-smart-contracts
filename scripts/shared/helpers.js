@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const parse = require("csv-parse");
-const { run } = require('hardhat')
+const { run, network: hreNetwork } = require('hardhat')
 
 const {
   PEGASUS_DEPLOY_KEY,
@@ -38,7 +38,6 @@ function sleep(ms) {
 async function getFrameSigner() {
   if (process.env.USE_FRAME_SIGNER !== 'true') {
     console.log("[getFrameSigner] USE_FRAME_SIGNER not true, returning default signer.");
-    // Fallback to default Hardhat signer if Frame is not explicitly requested
     const accounts = await ethers.getSigners();
     if (!accounts || accounts.length === 0) {
       throw new Error("No default Hardhat signers found.");
@@ -48,32 +47,57 @@ async function getFrameSigner() {
 
   console.log("[getFrameSigner] Attempting to connect to Frame signer...");
   try {
-    // Use the specific Frame provider URL
-    const frameProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:1248");
+    const frameProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:1248", "any"); // Use 'any' network initially
+
+    // Get the target chain ID from Hardhat configuration
+    const targetChainId = hreNetwork.config?.chainId ?? (await ethers.provider.getNetwork()).chainId;
+    console.log(`[getFrameSigner] Target network specified by Hardhat: ${hreNetwork.name} (Chain ID: ${targetChainId})`);
+
+    // Check Frame's current network and switch if necessary
+    const currentFrameNet = await frameProvider.getNetwork();
+    console.log(`[getFrameSigner] Frame's current network: Chain ID ${currentFrameNet.chainId}`);
+
+    if (currentFrameNet.chainId !== targetChainId) {
+      console.log(`[getFrameSigner] Frame network (ID: ${currentFrameNet.chainId}) does not match target (ID: ${targetChainId}). Attempting to switch...`);
+      const hexChainId = "0x" + targetChainId.toString(16);
+      try {
+        await frameProvider.send("wallet_switchEthereumChain", [{ chainId: hexChainId }]);
+        // Re-check network after switch attempt
+        const newFrameNet = await frameProvider.getNetwork();
+        if (newFrameNet.chainId !== targetChainId) {
+          throw new Error(`Frame did not switch to the correct network (expected ${targetChainId}, still on ${newFrameNet.chainId}). Please switch manually in Frame.`);
+        }
+        console.log(`[getFrameSigner] Frame successfully switched to network ID: ${newFrameNet.chainId}`);
+        await sleep(2000); // Add a 2-second delay to allow Frame to stabilize connection
+      } catch (switchError) {
+        console.error(`[getFrameSigner] Error sending network switch request to Frame: ${switchError.message}`);
+        throw new Error(`Failed to switch Frame network. Please switch manually to Chain ID ${targetChainId}. Error: ${switchError.message}`);
+      }
+    } else {
+      console.log("[getFrameSigner] Frame is already connected to the correct network.");
+    }
     
-    // Check connection by requesting accounts
+    // Check connection by requesting accounts (after potential network switch)
     const frameAccounts = await frameProvider.listAccounts();
     if (frameAccounts.length === 0) {
       throw new Error("Frame is running but no account is connected/selected.");
     }
     
-    // Get the signer from the Frame provider
     const signer = frameProvider.getSigner();
     const signerAddress = await signer.getAddress();
-    console.log(`[getFrameSigner] Successfully connected to Frame signer: ${signerAddress}`);
+    console.log(`[getFrameSigner] Successfully connected to Frame signer: ${signerAddress} on network ID: ${targetChainId}`);
     return signer;
 
   } catch (error) {
     console.error("[getFrameSigner] Failed to connect to Frame signer. Ensure Frame is running, unlocked, and accessible at http://127.0.0.1:1248");
-    console.error(error.message);
-    // Decide how to handle error: rethrow, or fallback to default signer?
-    // Rethrowing to make the failure explicit:
-    throw new Error(`getFrameSigner failed: ${error.message}`); 
-    // // Or fallback (use with caution):
-    // console.warn("[getFrameSigner] Falling back to default Hardhat signer.");
-    // const accounts = await ethers.getSigners();
-    // if (!accounts || accounts.length === 0) throw new Error("Fallback failed: No default signers.");
-    // return accounts[0];
+    // Check if the error is due to network mismatch or connection failure
+    if (error.message.includes("Frame did not switch") || error.message.includes("Failed to switch Frame")) {
+       console.error(error.message); // Log the specific switch error
+       throw error; // Rethrow the specific error
+    } else {
+        console.error(error.message); // Log generic connection error
+        throw new Error(`getFrameSigner failed: ${error.message}`); 
+    }
   }
 }
 
@@ -137,6 +161,7 @@ async function deployContract(name, args, label, options, registerName, signer) 
   syncDeployInfo(registerName ?? name, {
     name: registerName ?? name,
     imple: contract.address,
+    arguments: args,
   });
 
   return contract;
@@ -196,19 +221,19 @@ async function processBatch(batchLists, batchSize, handler) {
   }
 }
 
-async function updateTokensPerInterval(distributor, tokensPerInterval, label, signer) {
+async function updateTokensPerInterval(distributor, tokensPerInterval, label, signer, gasOverrides) {
   const prevTokensPerInterval = await distributor.tokensPerInterval();
   if (prevTokensPerInterval.eq(0)) {
     // if the tokens per interval was zero, the distributor.lastDistributionTime may not have been updated for a while
     // so the lastDistributionTime should be manually updated here
     await sendTxn(
-      distributor.updateLastDistributionTime({ gasLimit: 1000000 }),
+      distributor.updateLastDistributionTime({ gasLimit: 1000000, ...(gasOverrides || {}) }),
       `${label}.updateLastDistributionTime`,
       signer
     );
   }
   await sendTxn(
-    distributor.setTokensPerInterval(tokensPerInterval, { gasLimit: 1000000 }),
+    distributor.setTokensPerInterval(tokensPerInterval, { gasLimit: 1000000, ...(gasOverrides || {}) }),
     `${label}.setTokensPerInterval`,
     signer
   );

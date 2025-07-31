@@ -2,4 +2,79 @@ artifacts/
 cache/
 node_modules/
 env.json
-env.json
+
+# System files
+.DS_Store
+**/.DS_Store
+
+# Environment files
+.env
+.env.example
+.env.local
+.env.*.local
+
+# Temporary and backup files
+*.bak
+*.old
+*.tmp
+*.swp
+*.log
+*~
+
+# Archive files
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-*
+*.code-workspace
+
+# PM2 files
+ecosystem.config.js
+ecosystem-*.config.js
+test-pm2.js
+
+# Bytecode dumps
+*bytecode*.txt
+online_bytecode.txt
+atlantis_bytecode*.txt
+
+# Deployment logs (keep only production)
+deployment-log-*.json
+!deployment-log-sonic.json
+!deployment-log-superseed.json
+
+# Failed deployments
+*-failed-*.json
+
+# Verification results
+verification-results-*.json
+
+# Test deployment files
+scripts/staking/yalp-vault-deployment-*.json
+scripts/staking/amped-routers-deployment-*.json
+scripts/staking/zapper-deployment-*.json
+scripts/tokens/amped-deployment-*.json
+scripts/tokens/amped-oft-deployment-*.json
+scripts/staking/yalp-deployment-*.json
+scripts/staking/yalp-vault-*-deployment-*.json
+
+# Temporary keeper bot folder
+yalp-keeper-bot/
+yalp-keeper-bot.zip
+
+# Debug and test scripts (uncomment if you want to ignore them)
+# scripts/**/debug-*.js
+# scripts/**/test*.js
+
+# Miscellaneous
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity

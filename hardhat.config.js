@@ -10,7 +10,7 @@ const {
   // POLYGONSCAN_API_KEY,
   // SNOWTRACE_API_KEY,
   // ARBISCAN_API_KEY,
-  // ETHERSCAN_API_KEY,
+  ETHERSCAN_API_KEY,
   BSC_TESTNET_URL,
   BSC_TESTNET_DEPLOY_KEY,
   // ARBITRUM_TESTNET_DEPLOY_KEY,
@@ -21,8 +21,8 @@ const {
   // AVAX_URL,
   // POLYGON_DEPLOY_KEY,
   // POLYGON_URL,
-  // MAINNET_URL,
-  // MAINNET_DEPLOY_KEY,
+  ETHEREUM_URL,
+  ETHEREUM_DEPLOY_KEY,
   PEGASUS_RPC,
   PEGASUS_DEPLOY_KEY,
   PEGASUS_API_KEY,
@@ -37,12 +37,23 @@ const {
   BERACHAIN_RPC,
   BERACHAIN_DEPLOY_KEY,
   BERACHAIN_API_KEY,
+  BASE_RPC,
+  BASE_DEPLOY_KEY,
+  BASE_API_KEY,
+  BASESCAN_API_KEY,
   MEGAETH_TESTNET_RPC,
   MEGAETH_TESTNET_DEPLOY_KEY,
   MEGAETH_TESTNET_API_KEY,
   SUPERSEED_RPC,
   SUPERSEED_DEPLOY_KEY,
   SUPERSEED_API_KEY,
+  BASESEPOLIA_RPC,
+  BASESEPOLIA_DEPLOY_KEY,
+  BASESEPOLIA_API_KEY,
+  SEPOLIA_RPC,
+  SEPOLIA_DEPLOY_KEY,
+  SONIC_BLAZE_TESTNET_RPC,
+  SONIC_BLAZE_TESTNET_DEPLOY_KEY,
 } = require("./env.json")
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -54,6 +65,12 @@ task("accounts", "Prints the list of accounts", async () => {
     console.info(account.address)
   }
 })
+
+// New task to check loaded network configuration
+task("checkconfig", "Prints the loaded network configuration", async (taskArgs, hre) => {
+  console.log("Loaded network configuration:");
+  console.log(JSON.stringify(hre.config.networks, null, 2));
+});
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
@@ -77,6 +94,11 @@ module.exports = {
     },
     hardhat: {
       allowUnlimitedContractSize: true
+    },
+    ethereum: {
+      url: ETHEREUM_URL,
+      chainId: 1,
+      accounts: [ETHEREUM_DEPLOY_KEY]
     },
     pegasus: {
       url: PEGASUS_RPC,
@@ -111,6 +133,11 @@ module.exports = {
       chainId: 80094,
       accounts: [BERACHAIN_DEPLOY_KEY]
     },
+    base: {
+      url: BASE_RPC,
+      chainId: 8453,
+      accounts: [BASE_DEPLOY_KEY]
+    },
     megaeth: {
       url: MEGAETH_TESTNET_RPC,
       chainId: 6342,
@@ -123,17 +150,37 @@ module.exports = {
       // EIP‑1559 style fee params (adjust as network demands):
       maxPriorityFeePerGas: 1100000, // 0.0011 gwei tip
       maxFeePerGas: 1000000000000 // 1000 gwei cap (higher than typical base to ensure inclusion)
+    },
+    sepolia: {
+      url: SEPOLIA_RPC || "https://api-ethereum-sepolia.n.dwellir.com/5a0bba02-0379-4cbc-87da-c7e5b29bb287",
+      chainId: 11155111,
+      accounts: [SEPOLIA_DEPLOY_KEY || BSC_TESTNET_DEPLOY_KEY] // fallback to BSC testnet key if not set
+    },
+    basesepolia: {
+      url: BASESEPOLIA_RPC,
+      chainId: 84532,
+      accounts: [BASESEPOLIA_DEPLOY_KEY || SEPOLIA_DEPLOY_KEY || BSC_TESTNET_DEPLOY_KEY] // fallback to other testnet keys
+    },
+    sonicblazetestnet: {
+      url: SONIC_BLAZE_TESTNET_RPC || "https://rpc.blaze.soniclabs.com",
+      chainId: 57054,
+      accounts: [SONIC_BLAZE_TESTNET_DEPLOY_KEY || BSC_TESTNET_DEPLOY_KEY] // fallback to BSC testnet key if not set
     }
   },
   etherscan: {
     apiKey: {
+      mainnet: ETHERSCAN_API_KEY,
       pegasus: PEGASUS_API_KEY,
       phoenix: PHOENIX_API_KEY,
       bsc: BSCSCAN_API_KEY,
       sonic: SONIC_API_KEY,
       berachain: BERACHAIN_API_KEY,
       megaeth: MEGAETH_TESTNET_API_KEY,
-      superseed: SUPERSEED_API_KEY
+      superseed: SUPERSEED_API_KEY,
+      base: BASE_API_KEY,
+      sepolia: ETHERSCAN_API_KEY, // uses same API key as mainnet Ethereum
+      basesepolia: BASESCAN_API_KEY, // Using Basescan API key for Base Sepolia
+      sonicblazetestnet: "placeholder" // Sonic Blaze testnet might not have explorer API yet
     },
     customChains: [
       {
@@ -191,15 +238,71 @@ module.exports = {
           apiURL: "https://explorer.superseed.xyz/api",
           browserURL: "https://explorer.superseed.xyz"
         }
+      },
+      {
+        network: "base",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org"
+        }
+      },
+      {
+        network: "sepolia",
+        chainId: 11155111,
+        urls: {
+          apiURL: "https://api-sepolia.etherscan.io/api",
+          browserURL: "https://sepolia.etherscan.io"
+        }
+      },
+      {
+        network: "basesepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "https://sepolia.basescan.org"
+        }
+      },
+      {
+        network: "sonicblazetestnet",
+        chainId: 57054,
+        urls: {
+          apiURL: "https://api-blaze.sonicscan.org/api", // May need adjustment when available
+          browserURL: "https://blaze.sonicscan.org" // May need adjustment when available
+        }
       }
     ]
   },
   solidity: {
-    version: "0.6.12",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 10
+    compilers: [
+      {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 10
+          }
+        }
+      },
+      {
+        version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      }
+    ],
+    overrides: {
+      "contracts/tokens/AmpedToken.sol": {
+        version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
       }
     }
   },

@@ -18,25 +18,29 @@ async function configureNewToken() {
     const network = getNetwork(hre.network.name);
     console.log("Network:", network)
     
+    // Get the Frame signer explicitly
+    const { getFrameSigner } = require("../shared/helpers");
+    const signer = await getFrameSigner();
+
     const tokens = tokenList[network]
     console.log("Tokens found for network:", tokens ? Object.keys(tokens) : "none")
     
     try {
         const vaultAddress = getContractAddress("Vault")
         console.log("Vault address from deployments:", vaultAddress)
-        const vaultContract = await contractAt("Vault", vaultAddress)
+        const vaultContract = await contractAt("Vault", vaultAddress, signer)
         console.log("Vault contract found at:", vaultContract.address)
         
-        const vaultPriceFeedContract = await contractAt("VaultPriceFeed", getContractAddress("VaultPriceFeed"))
+        const vaultPriceFeedContract = await contractAt("VaultPriceFeed", getContractAddress("VaultPriceFeed"), signer)
         console.log("VaultPriceFeed contract found at:", vaultPriceFeedContract.address)
         
-        const timelockContract = await contractAt("Timelock", getContractAddress("Timelock"))
+        const timelockContract = await contractAt("Timelock", getContractAddress("Timelock"), signer)
         console.log("Timelock contract found at:", timelockContract.address)
         
-        const priceFeedTimelockContract = await contractAt("PriceFeedTimelock", getContractAddress("PriceFeedTimelock"))
+        const priceFeedTimelockContract = await contractAt("PriceFeedTimelock", getContractAddress("PriceFeedTimelock"), signer)
         console.log("PriceFeedTimelock contract found at:", priceFeedTimelockContract.address)
         
-        const fastPriceFeedContract = await contractAt("FastPriceFeed", getContractAddress("FastPriceFeed"))
+        const fastPriceFeedContract = await contractAt("FastPriceFeed", getContractAddress("FastPriceFeed"), signer)
         console.log("FastPriceFeed contract found at:", fastPriceFeedContract.address)
         
         const admin = await priceFeedTimelockContract.admin()
@@ -49,17 +53,17 @@ async function configureNewToken() {
         console.log('PriceFeedTimelock buffer', prtlbuffer.toString())
 
         if (parseInt(tlbuffer.toString()) !== 0) {
-            await sendTxn(timelockContract.setBuffer(0), 'timelock.setBuffer(0)')
+            await sendTxn(timelockContract.setBuffer(0), 'timelock.setBuffer(0)', signer)
         }
 
         if (parseInt(prtlbuffer.toString()) !== 0) {
-            await sendTxn(priceFeedTimelockContract.setBuffer(0), 'priceFeedTimelock.setBuffer(0)')
+            await sendTxn(priceFeedTimelockContract.setBuffer(0), 'priceFeedTimelock.setBuffer(0)', signer)
         }
 
         if (admin !== await fastPriceFeedContract.gov()) {
-            await sendTxn(priceFeedTimelockContract.signalSetGov(fastPriceFeedContract.address, admin), "priceFeedTimelockContract.signalSetGov(fastPriceFeed, admin)")
+            await sendTxn(priceFeedTimelockContract.signalSetGov(fastPriceFeedContract.address, admin), "priceFeedTimelockContract.signalSetGov(fastPriceFeed, admin)", signer)
             await sleep(3000)
-            await sendTxn(priceFeedTimelockContract.setGov(fastPriceFeedContract.address, admin), "priceFeedTimelockContract.setGov(fastPriceFeed, admin)")
+            await sendTxn(priceFeedTimelockContract.setGov(fastPriceFeedContract.address, admin), "priceFeedTimelockContract.setGov(fastPriceFeed, admin)", signer)
         }
 
         let fastPriceTokenArray = []
@@ -71,9 +75,9 @@ async function configureNewToken() {
             fastPricePrecisionArray = [...fastPricePrecisionArray, tokens[t].fastPricePrecision ?? 1000]
         }
 
-        await sendTxn(fastPriceFeedContract.setTokens(fastPriceTokenArray, fastPricePrecisionArray), "fastPriceFeedContract.setTokens([...])")
+        await sendTxn(fastPriceFeedContract.setTokens(fastPriceTokenArray, fastPricePrecisionArray), "fastPriceFeedContract.setTokens([...])", signer)
 
-        await sendTxn(fastPriceFeedContract.setGov(priceFeedTimelockContract.address), 'fastPriceFeedContract.setGov(priceFeedTimelockContract)')
+        await sendTxn(fastPriceFeedContract.setGov(priceFeedTimelockContract.address), 'fastPriceFeedContract.setGov(priceFeedTimelockContract)', signer)
 
         for (const t in tokens) {
             const info = tokens[t]
@@ -84,24 +88,24 @@ async function configureNewToken() {
 
             await sendTxn(timelockContract.signalVaultSetTokenConfig(
                 vaultContract.address, info.address, info.decimals, info.tokenWeight, info.minProfitBps, info.maxUsdgAmount, info.isStable, info.isShortable
-            ), `timelockContract.signalVaultSetTokenConfig(${t})`)
+            ), `timelockContract.signalVaultSetTokenConfig(${t})`, signer)
 
             await sendTxn(priceFeedTimelockContract.signalPriceFeedSetTokenConfig(
                 vaultPriceFeedContract.address, info.address, info.priceFeed, info.priceDecimals, info.stable
-            ), `priceFeedTimelockContract.signalPriceFeedSetTokenConfig(${t})`)
+            ), `priceFeedTimelockContract.signalPriceFeedSetTokenConfig(${t})`, signer)
 
             await sleep(3000)
 
             await sendTxn(timelockContract.vaultSetTokenConfig(
                 vaultContract.address, info.address, info.decimals, info.tokenWeight, info.minProfitBps, info.maxUsdgAmount, info.isStable, info.isShortable
-            ), `timelockContract.vaultSetTokenConfig(${t})`)
+            ), `timelockContract.vaultSetTokenConfig(${t})`, signer)
             await sendTxn(priceFeedTimelockContract.priceFeedSetTokenConfig(
                 vaultPriceFeedContract.address, info.address, info.priceFeed, info.priceDecimals, info.stable
-            ), `priceFeedTimelockContract.priceFeedSetTokenConfig(${t})`)
+            ), `priceFeedTimelockContract.priceFeedSetTokenConfig(${t})`, signer)
         }
 
-        await sendTxn(timelockContract.setBuffer(86400), 'timelock.setBuffer(86400)')
-        await sendTxn(priceFeedTimelockContract.setBuffer(86400), 'priceFeedTimelock.setBuffer(86400)')
+        await sendTxn(timelockContract.setBuffer(86400), 'timelock.setBuffer(86400)', signer)
+        await sendTxn(priceFeedTimelockContract.setBuffer(86400), 'priceFeedTimelock.setBuffer(86400)', signer)
     } catch (error) {
         console.error("Error occurred:", error)
     }

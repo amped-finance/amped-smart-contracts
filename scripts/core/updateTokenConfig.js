@@ -42,11 +42,11 @@ async function main() {
   await sendTxn(
     timelock.setFees(
       vault.address,
-      30, // taxBasisPoints
-      20, // stableTaxBasisPoints
-      30, // mintBurnFeeBasisPoints
-      30, // swapFeeBasisPoints (0.5%)
-      4,  // stableSwapFeeBasisPoints
+      5, // taxBasisPoints
+      0, // stableTaxBasisPoints
+      8, // mintBurnFeeBasisPoints
+      50, // swapFeeBasisPoints (0.5%)
+      0,  // stableSwapFeeBasisPoints
       10, // marginFeeBasisPoints
       "5000000000000000000", // liquidationFeeUsd
       24 * 60 * 60, // minProfitTime
@@ -62,8 +62,8 @@ async function main() {
       address: "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c",
       tokenWeight: 5000, // reduced from 10000
       minProfitBps: 20,
-      maxUsdgAmount: 5000, // 5000 USD
-      bufferAmount: 1000,
+      maxUsdgAmount: 25000, // 5000 USD
+      bufferAmount: 500,
       usdgAmount: 0
     },
     {
@@ -77,6 +77,15 @@ async function main() {
     },
     {
       name: "WS",
+      address: "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38",
+      tokenWeight: 12000,
+      minProfitBps: 20,
+      maxUsdgAmount: 100000, // 100,000 USD
+      bufferAmount: 1000,
+      usdgAmount: 0
+    },
+    {
+      name: "STS",
       address: "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38",
       tokenWeight: 12000,
       minProfitBps: 20,

@@ -28,8 +28,8 @@ contract YieldBearingALPVault is ReentrancyGuard {
     IERC20 public immutable esAmp;
     
     // ERC20 state
-    string public constant name = "Yield Bearing ALP";
-    string public constant symbol = "yALP";
+    string public constant name = "Yield Bearing ALP (Sonic)";
+    string public constant symbol = "yALP.s";
     uint8 public constant decimals = 18;
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;

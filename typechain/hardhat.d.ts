@@ -13,6 +13,118 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "ILayerZeroEndpoint",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILayerZeroEndpoint__factory>;
+    getContractFactory(
+      name: "ILayerZeroReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILayerZeroReceiver__factory>;
+    getContractFactory(
+      name: "ILayerZeroUserApplicationConfig",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILayerZeroUserApplicationConfig__factory>;
+    getContractFactory(
+      name: "LzApp",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LzApp__factory>;
+    getContractFactory(
+      name: "NonblockingLzApp",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.NonblockingLzApp__factory>;
+    getContractFactory(
+      name: "BaseOFTV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.BaseOFTV2__factory>;
+    getContractFactory(
+      name: "ICommonOFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICommonOFT__factory>;
+    getContractFactory(
+      name: "IOFTReceiverV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IOFTReceiverV2__factory>;
+    getContractFactory(
+      name: "IOFTV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IOFTV2__factory>;
+    getContractFactory(
+      name: "OFTCoreV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.OFTCoreV2__factory>;
+    getContractFactory(
+      name: "OFTV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.OFTV2__factory>;
+    getContractFactory(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
+      name: "IVotes",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IVotes__factory>;
+    getContractFactory(
+      name: "IERC5267",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC5267__factory>;
+    getContractFactory(
+      name: "IERC5805",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC5805__factory>;
+    getContractFactory(
+      name: "IERC6372",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC6372__factory>;
+    getContractFactory(
+      name: "Pausable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Pausable__factory>;
+    getContractFactory(
+      name: "ERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20__factory>;
+    getContractFactory(
+      name: "ERC20Burnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Burnable__factory>;
+    getContractFactory(
+      name: "ERC20Permit",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Permit__factory>;
+    getContractFactory(
+      name: "ERC20Votes",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Votes__factory>;
+    getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
+      name: "IERC20Permit",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Permit__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
+      name: "EIP712",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EIP712__factory>;
+    getContractFactory(
+      name: "ERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC165__factory>;
+    getContractFactory(
+      name: "IERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC165__factory>;
+    getContractFactory(
+      name: "ShortStrings",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ShortStrings__factory>;
+    getContractFactory(
       name: "Governable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Governable__factory>;
@@ -377,6 +489,34 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ReferralStorage__factory>;
     getContractFactory(
+      name: "AmpedRewardsRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AmpedRewardsRouter__factory>;
+    getContractFactory(
+      name: "ISwapRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ISwapRouter__factory>;
+    getContractFactory(
+      name: "AmpedStakingRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AmpedStakingRouter__factory>;
+    getContractFactory(
+      name: "ISwapRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ISwapRouter__factory>;
+    getContractFactory(
+      name: "AmpedSwapRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AmpedSwapRouter__factory>;
+    getContractFactory(
+      name: "IDexRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IDexRouter__factory>;
+    getContractFactory(
+      name: "IPriceOracle",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPriceOracle__factory>;
+    getContractFactory(
       name: "BonusDistributor",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BonusDistributor__factory>;
@@ -392,6 +532,10 @@ declare module "hardhat/types/runtime" {
       name: "IRewardRouterV2",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IRewardRouterV2__factory>;
+    getContractFactory(
+      name: "IRewardRouterV2Extended",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IRewardRouterV2Extended__factory>;
     getContractFactory(
       name: "IRewardTracker",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -432,6 +576,14 @@ declare module "hardhat/types/runtime" {
       name: "Vester",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Vester__factory>;
+    getContractFactory(
+      name: "YieldBearingALPVault",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.YieldBearingALPVault__factory>;
+    getContractFactory(
+      name: "YieldBearingALPVaultBaseSepolia",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.YieldBearingALPVaultBaseSepolia__factory>;
     getContractFactory(
       name: "BaseToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -517,6 +669,146 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.YieldTracker__factory>;
 
+    getContractAt(
+      name: "ILayerZeroEndpoint",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILayerZeroEndpoint>;
+    getContractAt(
+      name: "ILayerZeroReceiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILayerZeroReceiver>;
+    getContractAt(
+      name: "ILayerZeroUserApplicationConfig",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILayerZeroUserApplicationConfig>;
+    getContractAt(
+      name: "LzApp",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LzApp>;
+    getContractAt(
+      name: "NonblockingLzApp",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.NonblockingLzApp>;
+    getContractAt(
+      name: "BaseOFTV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.BaseOFTV2>;
+    getContractAt(
+      name: "ICommonOFT",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICommonOFT>;
+    getContractAt(
+      name: "IOFTReceiverV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IOFTReceiverV2>;
+    getContractAt(
+      name: "IOFTV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IOFTV2>;
+    getContractAt(
+      name: "OFTCoreV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.OFTCoreV2>;
+    getContractAt(
+      name: "OFTV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.OFTV2>;
+    getContractAt(
+      name: "Ownable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable>;
+    getContractAt(
+      name: "IVotes",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IVotes>;
+    getContractAt(
+      name: "IERC5267",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC5267>;
+    getContractAt(
+      name: "IERC5805",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC5805>;
+    getContractAt(
+      name: "IERC6372",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC6372>;
+    getContractAt(
+      name: "Pausable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Pausable>;
+    getContractAt(
+      name: "ERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20>;
+    getContractAt(
+      name: "ERC20Burnable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Burnable>;
+    getContractAt(
+      name: "ERC20Permit",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Permit>;
+    getContractAt(
+      name: "ERC20Votes",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Votes>;
+    getContractAt(
+      name: "IERC20Metadata",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
+      name: "IERC20Permit",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Permit>;
+    getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
+      name: "EIP712",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EIP712>;
+    getContractAt(
+      name: "ERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC165>;
+    getContractAt(
+      name: "IERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC165>;
+    getContractAt(
+      name: "ShortStrings",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ShortStrings>;
     getContractAt(
       name: "Governable",
       address: string,
@@ -973,6 +1265,41 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ReferralStorage>;
     getContractAt(
+      name: "AmpedRewardsRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AmpedRewardsRouter>;
+    getContractAt(
+      name: "ISwapRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ISwapRouter>;
+    getContractAt(
+      name: "AmpedStakingRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AmpedStakingRouter>;
+    getContractAt(
+      name: "ISwapRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ISwapRouter>;
+    getContractAt(
+      name: "AmpedSwapRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AmpedSwapRouter>;
+    getContractAt(
+      name: "IDexRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IDexRouter>;
+    getContractAt(
+      name: "IPriceOracle",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPriceOracle>;
+    getContractAt(
       name: "BonusDistributor",
       address: string,
       signer?: ethers.Signer
@@ -992,6 +1319,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IRewardRouterV2>;
+    getContractAt(
+      name: "IRewardRouterV2Extended",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IRewardRouterV2Extended>;
     getContractAt(
       name: "IRewardTracker",
       address: string,
@@ -1042,6 +1374,16 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Vester>;
+    getContractAt(
+      name: "YieldBearingALPVault",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.YieldBearingALPVault>;
+    getContractAt(
+      name: "YieldBearingALPVaultBaseSepolia",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.YieldBearingALPVaultBaseSepolia>;
     getContractAt(
       name: "BaseToken",
       address: string,

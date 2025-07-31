@@ -177,9 +177,7 @@ export class IGlpManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    cooldownDuration(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    cooldownDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getAumInUsdg(
       maximise: boolean,
@@ -243,9 +241,7 @@ export class IGlpManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  cooldownDuration(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  cooldownDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
   getAumInUsdg(
     maximise: boolean,
@@ -376,9 +372,7 @@ export class IGlpManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    cooldownDuration(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    cooldownDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     getAumInUsdg(
       maximise: boolean,
@@ -443,9 +437,7 @@ export class IGlpManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    cooldownDuration(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    cooldownDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getAumInUsdg(
       maximise: boolean,

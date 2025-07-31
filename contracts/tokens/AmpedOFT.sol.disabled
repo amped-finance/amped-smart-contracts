@@ -1,0 +1,128 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@layerzerolabs/solidity-examples/contracts/token/oft/v2/OFTV2.sol";
+
+/**
+ * @title AmpedOFT
+ * @dev ERC20 OFT token for cross-chain deployments without initial supply
+ * This contract is deployed on remote chains where tokens are bridged from the main chain
+ */
+contract AmpedOFT is OFTV2, ERC20Burnable, ERC20Permit, ERC20Votes, Pausable {
+    uint8 private constant _DECIMALS = 18;
+
+    /**
+     * @dev Constructor to initialize the AMPED OFT token
+     * @param _lzEndpoint LayerZero endpoint address
+     */
+    constructor(
+        address _lzEndpoint
+    ) OFTV2("Amped Finance", "AMPED", 8, _lzEndpoint) 
+      ERC20Permit("Amped Finance") {
+        // No initial mint - tokens will be bridged from main chain
+    }
+
+    /**
+     * @dev Returns the number of decimals for the token
+     */
+    function decimals() public pure override(ERC20) returns (uint8) {
+        return _DECIMALS;
+    }
+
+    /**
+     * @dev Returns the token supply on this chain
+     */
+    function circulatingSupply() public view override returns (uint256) {
+        return totalSupply();
+    }
+
+    /**
+     * @dev Returns the token balance of an account
+     */
+    function token() public view override returns (address) {
+        return address(this);
+    }
+
+    /**
+     * @dev Required override for multiple inheritance
+     */
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override whenNotPaused {
+        super._beforeTokenTransfer(from, to, amount);
+    }
+
+    /**
+     * @dev Required override for ERC20Votes
+     */
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override(ERC20, ERC20Votes) {
+        super._afterTokenTransfer(from, to, amount);
+    }
+
+    /**
+     * @dev Required override for ERC20Votes
+     */
+    function _mint(address to, uint256 amount) internal override(ERC20, ERC20Votes) {
+        super._mint(to, amount);
+    }
+
+    /**
+     * @dev Required override for ERC20Votes
+     */
+    function _burn(address account, uint256 amount) internal override(ERC20, ERC20Votes) {
+        super._burn(account, amount);
+    }
+
+    /**
+     * @dev Debit tokens for OFT cross-chain transfer
+     */
+    function _debitFrom(
+        address _from,
+        uint16,
+        bytes32,
+        uint _amount
+    ) internal override returns (uint) {
+        address spender = _msgSender();
+        if (_from != spender) _spendAllowance(_from, spender, _amount);
+        _burn(_from, _amount);
+        return _amount;
+    }
+
+    /**
+     * @dev Credit tokens from OFT cross-chain transfer
+     */
+    function _creditTo(
+        uint16,
+        address _toAddress,
+        uint _amount
+    ) internal override returns (uint) {
+        _mint(_toAddress, _amount);
+        return _amount;
+    }
+
+    /**
+     * @dev Pause token transfers (emergency use only)
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev Unpause token transfers
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+}

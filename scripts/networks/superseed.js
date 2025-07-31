@@ -39,12 +39,12 @@ async function deploy_superseed() {
   syncDeployInfo("weth", { name: "weth", imple: "0x4200000000000000000000000000000000000006" });
   syncDeployInfo("usdc", { name: "usdc", imple: "0xC316C8252B5F2176d0135Ebb0999E99296998F2e" });
   syncDeployInfo("ousdt", { name: "ousdt", imple: "0x1217BfE6c773EEC6cc4A38b5Dc45B92292B6E189" });
-  syncDeployInfo("MultiSigner1", { name: "MultiSigner1", imple: "0xd795C3E9DccA7d3Fe9A6C9149e756cE06ed5e380" });
-  syncDeployInfo("MultiSigner2", { name: "MultiSigner2", imple: "0x2390b12FA119d0D10cd97C64e76DA986B4E8394c" });
-  syncDeployInfo("MultiSigner3", { name: "MultiSigner3", imple: "0x17595cF7879Af4156BbbbA9EF6231f73C5d44810" });
-  syncDeployInfo("MultiSigner4", { name: "MultiSigner4", imple: "0x7e8B7cfADc33C6a54FAeFA59a23d8a9149f1515f" });
-  syncDeployInfo("MultiSigner5", { name: "MultiSigner5", imple: "0x62c706D06865D6D26905A2c3495dF280755FCfa0" });
-  syncDeployInfo("MultiSigner6", { name: "MultiSigner6", imple: "0x7Fac2B2784523ef7Ddba64C97D611E3779d3291D" });
+  syncDeployInfo("MultiSigner1", { name: "MultiSigner1", imple: "0x2d11e1732b706689125ffc2c15ca7f3c1d7b5bd4" });
+  syncDeployInfo("MultiSigner2", { name: "MultiSigner2", imple: "0x6acf648627db9f517d1fdc98dc95d942f0292ae3" });
+  syncDeployInfo("MultiSigner3", { name: "MultiSigner3", imple: "0x453af48d3f78716acf09c5e56e7c426a7a736917" });
+  syncDeployInfo("MultiSigner4", { name: "MultiSigner4", imple: "0x3dd6a9744f7cbcff786a98779f8f9dae1ccaef33" });
+  syncDeployInfo("MultiSigner5", { name: "MultiSigner5", imple: "0xda3daf395860851c6a6f050e0eb5d8d1f3347d61" });
+  syncDeployInfo("MultiSigner6", { name: "MultiSigner6", imple: "0x012202764b1f9cb8db602895a79e90df15abd08c" });
   syncDeployInfo("nativeToken", { name: "nativeToken", imple: "0x4200000000000000000000000000000000000006" });
 
   // Wrap each deployment step in a check
